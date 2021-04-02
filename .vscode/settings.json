@@ -1,0 +1,7 @@
+{
+    // Allow pylance to use relative import
+    "python.analysis.extraPaths": [
+        "./rubik"
+    ],
+    "python.pythonPath": "/Users/arvind/.local/share/virtualenvs/rubik-5RewJ1rE/bin/python",
+}
