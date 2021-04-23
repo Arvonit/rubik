@@ -1,0 +1,156 @@
+import { Button } from '@chakra-ui/button';
+import { Box, HStack, SimpleGrid, Stack, Text, VStack } from '@chakra-ui/layout';
+import React, { ReactElement, useState } from 'react';
+import Piece from './Piece';
+
+interface Props {
+  cube: string;
+  setCube: (cube: string) => void;
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+}
+
+function Cube({ cube, setCube, selectedColor, setSelectedColor }: Props) {
+  const [backgroundColor, setBackgroundColor] = useState('');
+  const Color = Object.freeze({
+    WHITE: 'gray.100',
+    BLUE: 'blue.400',
+    RED: 'red.500',
+    ORANGE: 'orange.300',
+    GREEN: 'green.400',
+    YELLOW: 'yellow.300'
+  });
+  // const WHITE_COLOR = 'gray.100';
+  // const BLUE_COLOR = 'blue.400';
+  // const RED_COLOR = 'red.500';
+  // const ORANGE_COLOR = 'orange.300';
+  // const GREEN_COLOR = 'green.400';
+  // const YELLOW_COLOR = 'yellow.300';
+
+  function changeSelectedColor(color: string) {
+    console.log(color);
+
+    if (color === selectedColor) {
+      setBackgroundColor('white');
+      setSelectedColor('');
+      return;
+    }
+
+    setSelectedColor(color);
+    switch (color) {
+      case 'W':
+        setBackgroundColor(Color.WHITE);
+        break;
+      case 'B':
+        setBackgroundColor(Color.BLUE);
+        break;
+      case 'R':
+        setBackgroundColor(Color.RED);
+        break;
+      case 'O':
+        setBackgroundColor(Color.ORANGE);
+        break;
+      case 'G':
+        setBackgroundColor(Color.GREEN);
+        break;
+      case 'Y':
+        setBackgroundColor(Color.YELLOW);
+        break;
+    }
+  }
+
+  // function createPieceFromColor(color: string) {
+  //   return (
+  //     <Box
+  //       backgroundColor={color}
+  //       border="2px"
+  //       borderColor="blackAlpha.200"
+  //       height="50px"
+  //       width="50px"
+  //       onClick={event => console.log(event)}
+  //     />
+  //   );
+  // }
+
+  function cubeColorToBackgroundColor(color: string): string {
+    switch (color) {
+      case 'W':
+        return Color.WHITE;
+      case 'B':
+        return Color.BLUE;
+      case 'R':
+        return Color.RED;
+      case 'O':
+        return Color.ORANGE;
+      case 'G':
+        return Color.GREEN;
+      case 'Y':
+        return Color.YELLOW;
+      default:
+        return 'white';
+    }
+  }
+
+  function updateColor(index: number) {
+    if (selectedColor === '') {
+      return;
+    }
+
+    const newCube = cube.substring(0, index) + selectedColor + cube.substring(index + 1);
+    setCube(newCube);
+  }
+
+  function createPieceFromIndex(index: number) {
+    return (
+      <Piece
+        color={cubeColorToBackgroundColor(cube[index])}
+        updateColor={updateColor}
+        cubeColorIndex={index}
+      />
+    );
+  }
+
+  function createFaceFromIndex(index: number) {
+    return (
+      <SimpleGrid columns={3} spacing="0px">
+        {createPieceFromIndex(index)}
+        {createPieceFromIndex(index + 1)}
+        {createPieceFromIndex(index + 2)}
+        {createPieceFromIndex(index + 3)}
+        {createPieceFromIndex(index + 4)}
+        {createPieceFromIndex(index + 5)}
+        {createPieceFromIndex(index + 6)}
+        {createPieceFromIndex(index + 7)}
+        {createPieceFromIndex(index + 8)}
+      </SimpleGrid>
+    );
+  }
+
+  return (
+    <VStack>
+      {/* Cube map */}
+      <VStack spacing={0}>
+        <div style={{ position: 'relative', left: '-75px' }}>{createFaceFromIndex(0)}</div>
+        <HStack spacing={0}>
+          {createFaceFromIndex(9)}
+          {createFaceFromIndex(18)}
+          {createFaceFromIndex(27)}
+          {createFaceFromIndex(36)}
+        </HStack>
+        <div style={{ position: 'relative', left: '-75px' }}>{createFaceFromIndex(45)}</div>
+      </VStack>
+
+      {/* Color chooser */}
+      <Box backgroundColor={backgroundColor} padding={4}>
+        <Button onClick={event => changeSelectedColor('W')}></Button>
+        <Button colorScheme="blue" onClick={event => changeSelectedColor('B')}></Button>
+        <Button colorScheme="red" onClick={event => changeSelectedColor('R')}></Button>
+        <Button colorScheme="orange" onClick={event => changeSelectedColor('O')}></Button>
+        <Button colorScheme="green" onClick={event => changeSelectedColor('G')}></Button>
+        <Button colorScheme="yellow" onClick={event => changeSelectedColor('Y')}></Button>
+      </Box>
+    </VStack>
+  );
+}
+
+export default Cube;
