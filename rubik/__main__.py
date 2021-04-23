@@ -1,26 +1,49 @@
-import sys
+from argparse import ArgumentParser
 from cube import Cube
 from kociembasolver import KociembaSolver
 from printer import print_cube
 
 
 def main():
+    parser = ArgumentParser(description="Solve a 3x3 Rubik's cube")
+    parser.add_argument("cube_str",
+                        metavar="cube",
+                        action="store",
+                        nargs="?",
+                        type=str,
+                        help="A 54-character string with the colors of each face of the cube")
+
+    args = parser.parse_args()
+    cube_str: str = args.cube_str
     cube: Cube
 
-    try:
-        cube = Cube(sys.argv[1])
-    except IndexError:
-        # Example cube strings
-        # OBBOBRBYO GYYBOOBOG OBWBWYWWG BGRRRWOOR YWYRYRYGW RGWGGWRYG
-        # OBBOBRBYOGYYBOOBOGOBWBWYWWGBGRRRWOORYWYRYRYGWRGWGGWRYG
-        # WOWGYBWYOGYGYBYOGGROWBRGYWRBORWGGYBRBWORORBWBORGOWRYBY
-        cube = Cube("OBBOBRBYOGYYBOOBOGOBWBWYWWGBGRRRWOORYWYRYRYGWRGWGGWRYG")
+    if cube_str is None:
+        print("Generating a random cube string...")
+        cube = Cube()
+        print(str(cube))
+        print()
+    elif len(cube_str) != 54:
+        print("rubik: error: The cube string argument is not 54 characters long.")
+        return
+    else:
+        try:
+            cube = Cube(cube_str)
+        except ValueError as e:
+            print(f"rubik: error: {e}")
+            return
 
+    # Display and solve cube
     print_cube(cube)
+    print()
 
-    solver = KociembaSolver(cube)
-    solver.solve()
+    try:
+        solver = KociembaSolver(cube)
+        solver.solve()
+    except Exception as e:
+        print(f"rubik: error: {e}")
+        return
 
+    print()
     print_cube(cube)
 
 

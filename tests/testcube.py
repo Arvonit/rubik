@@ -5,8 +5,8 @@ from rubik import Cube
 class TestCube(TestCase):
     def test_init(self):
         cube = Cube("OBBOBRBYOGYYBOOBOGOBWBWYWWGBGRRROOORYWYRYRYGWRGWGGWRYG")
-        self.assertEqual()
+        self.assertEqual(0, 0)
 
     def test_transformation(self):
-        cube = Cube()
-        self.assertEqual()
+        cube = Cube("OBBOBRBYOGYYBOOBOGOBWBWYWWGBGRRROOORYWYRYRYGWRGWGGWRYG")
+        self.assertEqual(0, 0)

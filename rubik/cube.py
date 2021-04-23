@@ -1,10 +1,32 @@
 import numpy as np
+from random import choice
 from inspect import cleandoc
-from color import Color
+from facecube import FaceCube
 
 
 class Cube:
-    def __init__(self, cube_str: str):
+    def __init__(self, cube_str: str = None):
+        randomize_cube = False
+
+        if cube_str is None:
+            cube_str = "RRRRRRRRRBBBBBBBBBWWWWWWWWWGGGGGGGGGYYYYYYYYYOOOOOOOOO"
+            # assert len(cube_str) == 54
+            randomize_cube = True
+        else:
+            # Convert all the characters of the string to uppercase
+            cube_str = cube_str.upper()
+
+            # Make sure cube_str is 54 characters long
+            if len(cube_str) != 54:
+                raise ValueError("The cube string argument must be 54 characters long.")
+
+            # Verify cube_str is valid
+            for char in cube_str:
+                if char not in ("W", "B", "R", "G", "Y", "O"):
+                    raise ValueError("The cube string argument contains invalid characters " +
+                                     "(i.e. something other than " +
+                                     "'W', 'B', 'R', 'G', 'Y', 'O').")
+
         self.pieces: np.ndarray = np.array([
             # Up
             [
@@ -44,8 +66,18 @@ class Cube:
             ]
         ])
 
-    def randomize(self):
-        pass
+        if randomize_cube:
+            self.randomize()
+
+    def randomize(self, shuffles_num: int = 10):
+        transformations = ["F", "F'", "F2",
+                           "U", "U'", "U2",
+                           "L", "L'", "L2",
+                           "R", "R'", "R2",
+                           "B", "B'", "B2",
+                           "D", "D'", "D2"]
+        for i in range(shuffles_num):
+            self.transform(choice(transformations))
 
     def is_solved(self) -> bool:
         is_solved = True
@@ -88,6 +120,10 @@ class Cube:
             self._back(times, ccw)
         elif action == 'D':
             self._down(times, ccw)
+        elif action == 'Y':
+            self._rotate_y(times, ccw)
+        else:
+            print("Invalid transformation", transformation)
 
     def front_face(self) -> np.ndarray:
         return self.pieces[2]
@@ -215,10 +251,6 @@ class Cube:
         self.set_right_face(self._rotate_face(self.right_face(), times, ccw))
 
     def _front(self, times: int = 1, ccw: bool = False):
-        # times = -times if not ccw else times
-        # front_face = self.pieces[2]
-        # self.pieces[2] = np.rot90(front_face, times)
-
         self.set_front_face(self._rotate_face(self.front_face(), times, ccw))
 
         # Move edge columns up as well
@@ -242,10 +274,6 @@ class Cube:
                 self.up_face()[2] = right_face[:, 0]
 
     def _back(self, times: int = 1, ccw: bool = False):
-        # times = -times if not ccw else times
-        # back_face = self.pieces[4]
-        # self.pieces[4] = np.rot90(back_face, times)
-
         self.set_back_face(self._rotate_face(self.back_face(), times, ccw))
 
         # Move edge columns up as well
@@ -268,17 +296,60 @@ class Cube:
                 self.left_face()[:, 0] = down_face[2]
                 self.up_face()[0] = np.flip(left_face, 0)[:, 0]
 
-    def _middle(self, times: int = 1, ccw: bool = False):
-        pass
+    def _rotate_y(self, times: int = 1, ccw: bool = False):
+        for i in range(times):
+            up = self.up_face().copy()
+            left = self.left_face().copy()
+            front = self.front_face().copy()
+            right = self.right_face().copy()
+            back = self.back_face().copy()
+            down = self.down_face().copy()
 
-    def _equator(self, times: int = 1, ccw: bool = False):
-        pass
+            if not ccw:
+                self.set_front_face(right)
+                self.set_left_face(front)
+                self.set_right_face(back)
+                self.set_back_face(left)
+                self.set_up_face(self._rotate_face(up))
+                self.set_down_face(self._rotate_face(down, ccw=True))
+            else:
+                self.set_front_face(left)
+                self.set_left_face(back)
+                self.set_right_face(front)
+                self.set_back_face(right)
+                self.set_up_face(self._rotate_face(up, ccw=True))
+                self.set_down_face(self._rotate_face(down))
 
-    def _standing(self, times: int = 1, ccw: bool = False):
-        pass
+    def face_str(self) -> str:
+        up = self.up_face().flatten()
+        right = self.right_face().flatten()
+        front = self.front_face().flatten()
+        down = self.down_face().flatten()
+        left = self.left_face().flatten()
+        back = self.back_face().flatten()
+        cube_str = "".join(np.concatenate([up, right, front, down, left, back]))
 
-    def _rotate(self, direction: str, times: int = 1, ccw: bool = False):
-        pass
+        # Grab the middle color of each face to determine each face's color
+        # Convert the colors to lowercase so that they do not conflict with the face letters
+        up_color = self.up_face()[1][1].lower()
+        right_color = self.right_face()[1][1].lower()
+        front_color = self.front_face()[1][1].lower()
+        down_color = self.down_face()[1][1].lower()
+        left_color = self.left_face()[1][1].lower()
+        back_color = self.back_face()[1][1].lower()
+
+        # Convert the colors to lowercase so that they do not conflict with the face letters
+        cube_str = cube_str.lower()
+        # Convert colors to face letter
+        return cube_str.replace(up_color, "U") \
+            .replace(right_color, "R") \
+            .replace(front_color, "F") \
+            .replace(down_color, "D") \
+            .replace(left_color, "L") \
+            .replace(back_color, "B")
+
+    def to_face_cube(self) -> FaceCube:
+        return FaceCube(self.face_str())
 
     def __str__(self) -> str:
         up = self.up_face().flatten()

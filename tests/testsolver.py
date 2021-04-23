@@ -3,11 +3,9 @@ from kociembasolver import KociembaSolver
 from cube import Cube
 
 
-class TestOptimalSolver(TestCase):
-    def test_solve():
+class TestKociembaSolver(TestCase):
+    def test_solve(self):
         cube = Cube("OBBOBRBYOGYYBOOBOGOBWBWYWWGBGRRRWOORYWYRYRYGWRGWGGWRYG")
         solver = KociembaSolver(cube)
-
-        solver.solve(cube)  # TODO: Add assert here
-        # assert str(cube) == "BBBBBBBBB"
-        assert cube.is_solved()
+        solver.solve()
+        self.assertEqual(cube.is_solved(), True)

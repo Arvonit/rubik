@@ -5,7 +5,12 @@ name = "pypi"
 
 [packages]
 numpy = "*"
+string-color = "*"
 kociemba = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+matplotlib = "*"
+prettytable = "*"
 
 [dev-packages]
 autopep8 = "*"

@@ -4,7 +4,7 @@ from cube import Cube
 from stringcolor import cs
 
 
-def _flattened_pieces(cube: Cube) -> np.ndarray:
+def _flattened_pieces(cube: Cube) -> list[cs]:
     up = cube.pieces[0].flatten()
     top_rows = np.concatenate([cube.pieces[1][0],
                                cube.pieces[2][0],
