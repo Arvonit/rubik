@@ -5,6 +5,9 @@ from printer import print_cube
 
 
 def main():
+    """
+    The entry point for the CLI.
+    """
     parser = ArgumentParser(description="Solve a 3x3 Rubik's cube")
     parser.add_argument("cube_str",
                         metavar="cube",
@@ -32,7 +35,7 @@ def main():
             print(f"rubik: error: {e}")
             return
 
-    # Display and solve cube
+    # Before solver
     print_cube(cube)
     print()
 
@@ -43,6 +46,7 @@ def main():
         print(f"rubik: error: {e}")
         return
 
+    # After solver
     print()
     print_cube(cube)
 

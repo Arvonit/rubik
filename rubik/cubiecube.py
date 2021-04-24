@@ -1,7 +1,6 @@
 from __future__ import annotations
 from functools import reduce
 from math import comb
-
 from pieces import Corner, Edge
 
 
@@ -11,7 +10,7 @@ class CubieCube:
         :param cp: A list of the corner permutations
         :param co: A list of the corner orientations
         :param ep: A list of the edge permutations
-        :param cp: A list of the edge orientations
+        :param eo: A list of the edge orientations
         """
         if cp is not None and co is not None and ep is not None and eo is not None:
             self.cp = cp
@@ -31,11 +30,6 @@ class CubieCube:
             return 0
 
     def corner_multiply(self, other: CubieCube):
-        # cp = [self.cp[other.cp[i]] for i in range(8)]
-        # co = [(self.co[other.cp[i]] + other.co[i]) % 3 for i in range(8)]
-        # cp = [self.cp[other.cp[corner]] for corner in Corner]
-        # co = [(self.co[other.cp[corner]] + other.co[corner]) % 3 for corner in Corner]
-
         cp = []
         co = []
 
@@ -47,11 +41,6 @@ class CubieCube:
         self.cp = cp
 
     def edge_multiply(self, other: CubieCube):
-        # ep = [self.ep[other.ep[i]] for i in range(12)]
-        # eo = [(self.eo[other.ep[i]] + other.eo[i]) % 2 for i in range(12)]
-        # ep = [self.ep[other.ep[edge]] for edge in Edge]
-        # eo = [(other.eo[edge] + self.eo[other.ep[edge]]) % 2 for edge in Edge]
-
         ep = []
         eo = []
 
@@ -84,13 +73,8 @@ class CubieCube:
 
     @phase_1_corner.setter
     def phase_1_corner(self, new: int):
-        if not 0 <= new < 3 ** 7:
-            raise ValueError(
-                f"{new} is out of range for corner orientation coordinate, value must be in range "
-                "0..<2187."
-            )
-
         total = 0
+
         for i in range(7):
             x = new % 3
             self.co[6 - i] = x
@@ -109,13 +93,8 @@ class CubieCube:
 
     @phase_1_edge.setter
     def phase_1_edge(self, new: int):
-        if not 0 <= new < 2 ** 11:
-            raise ValueError(
-                f"{new} is out of range for edge orientation coordinate, value must be in the "
-                "range 0..<2047."
-            )
-
         total = 0
+
         for i in range(11):
             x = new % 2
             self.eo[10 - i] = x
@@ -133,22 +112,18 @@ class CubieCube:
         ud_slice = 0
         seen = 0
 
-        for j in range(12):
-            if 8 <= self.ep[j] < 12:
+        for i in range(12):
+            if 8 <= self.ep[i] < 12:
                 seen += 1
             elif seen >= 1:
-                ud_slice += self.choose(j, seen - 1)
+                ud_slice += self.choose(i, seen - 1)
 
         return ud_slice
 
     @phase_1_ud_slice.setter
     def phase_1_ud_slice(self, new: int):
-        if not 0 <= new < self.choose(12, 4):
-            raise ValueError(
-                f"{new} is out of range for UD slice coordinate, must be in the range "
-                "0..<494."
-            )
-
+        seen = 3
+        x = 0
         udslice_edges = [Edge.FR, Edge.FL, Edge.BL, Edge.BR]
         other_edges = [
             Edge.UR,
@@ -166,19 +141,17 @@ class CubieCube:
             self.ep[i] = Edge.DB
 
         # First position the slice edges
-        seen = 3
-        for j in range(11, -1, -1):
-            if new - self.choose(j, seen) < 0:
-                self.ep[j] = udslice_edges[seen]
+        for i in range(11, -1, -1):
+            if new - self.choose(i, seen) < 0:
+                self.ep[i] = udslice_edges[seen]
                 seen -= 1
             else:
-                new -= self.choose(j, seen)
+                new -= self.choose(i, seen)
 
         # Then the remaining edges
-        x = 0
-        for j in range(12):
-            if self.ep[j] == Edge.DB:
-                self.ep[j] = other_edges[x]
+        for i in range(12):
+            if self.ep[i] == Edge.DB:
+                self.ep[i] = other_edges[x]
                 x += 1
 
     @property
@@ -200,18 +173,19 @@ class CubieCube:
 
     @phase_2_corner.setter
     def phase_2_corner(self, new: int):
-        corners = list(range(8))
-        perm = [0] * 8
-        coeffs = [0] * 7
+        corners = [i for i in range(8)]
+        permutations = [0 for i in range(8)]
+        coeffecients = [0 for i in range(7)]
 
         for i in range(1, 8):
-            coeffs[i - 1] = new % (i + 1)
+            coeffecients[i - 1] = new % (i + 1)
             new //= i + 1
-        for i in range(6, -1, -1):
-            perm[i + 1] = corners.pop(i + 1 - coeffs[i])
 
-        perm[0] = corners[0]
-        self.cp = perm
+        for i in range(6, -1, -1):
+            permutations[i + 1] = corners.pop(i + 1 - coeffecients[i])
+
+        permutations[0] = corners[0]
+        self.cp = permutations
 
     @property
     def phase_2_edge(self):
@@ -233,9 +207,9 @@ class CubieCube:
 
     @phase_2_edge.setter
     def phase_2_edge(self, new: int):
-        edges = list(range(8))
-        permutations = [0] * 8
-        coeffecients = [0] * 7
+        edges = [i for i in range(8)]
+        permutations = [0 for i in range(8)]
+        coeffecients = [0 for i in range(7)]
 
         for i in range(1, 8):
             coeffecients[i - 1] = new % (i + 1)
@@ -267,19 +241,13 @@ class CubieCube:
 
     @phase_2_ud_slice.setter
     def phase_2_ud_slice(self, new: int):
-        if not 0 <= new < 24:
-            raise ValueError(
-                f"{new} is out of range for phase 2 UD slice coordinate, must be in range "
-                "0..<24"
-            )
-
         ud_slice_edges = [Edge.FR, Edge.FL, Edge.BL, Edge.BR]
-        coeffecients = [0] * 3
+        permutations = [0 for i in range(4)]
+        coeffecients = [0 for i in range(3)]
 
         for i in range(1, 4):
             coeffecients[i - 1] = new % (i + 1)
             new //= i + 1
-        permutations = [0] * 4
 
         for i in range(2, -1, -1):
             permutations[i + 1] = ud_slice_edges.pop(i + 1 - coeffecients[i])
@@ -296,6 +264,7 @@ class CubieCube:
             for j in range(i - 1, -1, -1):
                 if self.cp[j] > self.cp[i]:
                     s += 1
+
         return s % 2
 
     @property
@@ -305,12 +274,13 @@ class CubieCube:
             for j in range(i - 1, -1, -1):
                 if self.ep[j] > self.ep[i]:
                     s += 1
+
         return s % 2
 
     def validate(self):
         total = 0
-
-        edge_count = [0 for i in range(12)]
+        edge_count = [0 for edge in Edge]
+        corner_count = [0 for corner in Corner]
 
         for e in range(12):
             edge_count[self.ep[e]] += 1
@@ -323,8 +293,6 @@ class CubieCube:
         if total % 2 != 0:
             return -3
 
-        corner_count = [0] * 8
-
         for c in range(8):
             corner_count[self.cp[c]] += 1
         for i in range(8):
@@ -332,18 +300,19 @@ class CubieCube:
                 return -4
 
         total = 0
-
         for i in range(8):
             total += self.co[i]
+
         if total % 3 != 0:
             return -5
-        if self.edge_parity != self.corner_parity:
+        elif self.edge_parity != self.corner_parity:
             return -6
 
         return 0
 
 
-# MOVE_CUBE, which is needed for the Tables
+# Below is the code for `MOVE_CUBE`, which is needed for generating the move tables.
+# Written by Tom Begley.
 _cpU = (
     Corner.UBR,
     Corner.URF,

@@ -1,6 +1,5 @@
 import numpy as np
 from random import choice
-from inspect import cleandoc
 from facecube import FaceCube
 
 
@@ -69,7 +68,7 @@ class Cube:
         if randomize_cube:
             self.randomize()
 
-    def randomize(self, shuffles_num: int = 10):
+    def randomize(self, shuffles_num: int = 18):
         transformations = ["F", "F'", "F2",
                            "U", "U'", "U2",
                            "L", "L'", "L2",

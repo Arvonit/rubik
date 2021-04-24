@@ -1,4 +1,3 @@
-from numpy import average
 from prettytable import PrettyTable
 from cube import Cube
 from kociembasolver import KociembaSolver
@@ -26,6 +25,10 @@ def benchmark(trials: int = 100, shuffles_num: int = 10) -> list[float]:
 
 
 def main():
+    """
+    Generates a series of statistics about the running time and move count for increasingly shuffled
+    cubes. These statistics are calculated over a 100 trials.
+    """
     table = PrettyTable()
     table.field_names = ["Shuffles", "Time", "Min Time",
                          "Max Time", "Moves", "Min Moves", "Max Moves"]

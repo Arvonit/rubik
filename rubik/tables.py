@@ -99,32 +99,33 @@ class Tables:
                 tables["edge4_corner_prune"], cls.CORNER
             )
         else:
+            print("Generating move and pruning tables. May take a few minutes to complete.")
             # ----------  Phase 1 move tables  ---------- #
-            print("Making twist table")
+            print("Generating twist table")
             cls.twist_move = cls.make_twist_table()
-            print("Making flip table")
+            print("Generating flip table")
             cls.flip_move = cls.make_flip_table()
-            print("Making udslice table")
+            print("Generating udslice table")
             cls.udslice_move = cls.make_udslice_table()
 
             # ----------  Phase 2 move tables  ---------- #
-            print("Making edge4 table")
+            print("Generating edge4 table")
             cls.edge4_move = cls.make_edge4_table()
-            print("Making edge8 table")
+            print("Generating edge8 table")
             cls.edge8_move = cls.make_edge8_table()
-            print("Making corner table")
+            print("Generating corner table")
             cls.corner_move = cls.make_corner_table()
 
             # ----------  Phase 1 pruning tables  ---------- #
-            print("Making udslice twist prune table")
+            print("Generating udslice twist prune table")
             cls.udslice_twist_prune = cls.make_udslice_twist_prune()
-            print("Making udslice flip prune table")
+            print("Generating udslice flip prune table")
             cls.udslice_flip_prune = cls.make_udslice_flip_prune()
 
             # --------  Phase 2 pruning tables  ---------- #
-            print("Making edge4 edge8 prune table")
+            print("Generating edge4 edge8 prune table")
             cls.edge4_edge8_prune = cls.make_edge4_edge8_prune()
-            print("Making edge4 corner prune table\n")
+            print("Generating edge4 corner prune table\n")
             cls.edge4_corner_prune = cls.make_edge4_corner_prune()
 
             tables = {

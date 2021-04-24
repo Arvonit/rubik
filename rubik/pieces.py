@@ -27,7 +27,6 @@ class Corner(IntEnum):
     DRB = 7
 
 
-# TODO: Delete
 class Face(IntEnum):
     U = 0
     R = 1

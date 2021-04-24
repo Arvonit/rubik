@@ -3,6 +3,7 @@ from cubiecube import CubieCube
 from tables import Tables
 
 
+# TODO: Move functionality from CubieCube to CoordCube since that makes more sense
 class CoordCube:
     def __init__(
         self,
@@ -24,7 +25,8 @@ class CoordCube:
     @classmethod
     def from_cubie_cube(cls, cube: CubieCube) -> CoordCube:
         """
-        Converts the current `CubieCube` to a `CoordCube`.
+        Converts the current `CubieCube` to a `CoordCube`. We use a class method instead of an
+        instance method in `CubieCube` because of circular import errors.
         """
         return CoordCube(
             cube.phase_1_corner,

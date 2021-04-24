@@ -1,4 +1,3 @@
-import kociemba
 import numpy as np
 from coordcube import CoordCube
 from cube import Cube
@@ -9,6 +8,12 @@ from pieces import Face
 
 
 class KociembaSolver(Solver):
+    """
+    A basic implementation of Herbert Kociemba's Two Phase algorithm. Further details, including 
+    the rationale behind certain design decisions of this algorithm, can be found on Kociemba's
+    website (http://kociemba.org/cube.htm).
+    """
+
     def __init__(self, cube: Cube):
         super().__init__(cube)
         self.max_moves_length = 29  # Upper bound of the kociemba algorithm
@@ -22,13 +27,14 @@ class KociembaSolver(Solver):
         self.cubie_cube = self.face_cube.to_cubie_cube()
         self.coord_cube = CoordCube.from_cubie_cube(self.cubie_cube)
 
-        # Verify cube
+        # Validate cube
         self._validate_cube()
 
-        # Store the nth move with the index of the face being transformed in `axis` and the number
-        # "quarter" turns in `power`.
-        self.axis = [0 for i in range(self.max_moves_length)]
-        self.power = [0 for i in range(self.max_moves_length)]
+        # `moves_face` stores the moves' face whereas `moves_turn` stores the moves' number of
+        # quarter turns (i.e., 1 for clockwise, 2 for clockwise twice, and 3 for counterclockwise).
+        # These are used to generate the list of strings for `moves` once solved.
+        self.moves_face = [0 for i in range(self.max_moves_length)]
+        self.moves_turn = [0 for i in range(self.max_moves_length)]
 
         # Coordinates needed for phase 1
         self.phase_1_corner = [0 for i in range(self.max_moves_length)]
@@ -82,6 +88,7 @@ class KociembaSolver(Solver):
               f"{self.time_to_solve} seconds.")
         print(" ".join(self.moves))
 
+        # Determine which moves were calculated in phase 1 and phase 2
         # phase_1_moves = " ".join(self.moves[:self.phase_1_moves_index])
         # phase_2_moves = " ".join(self.moves[self.phase_1_moves_index:])
         # print(f"\nPhase 1 Moves: {phase_1_moves}")
@@ -106,20 +113,27 @@ class KociembaSolver(Solver):
         )
 
     def _phase_1_search(self, n: int, depth: int) -> int:
-        # print(n, depth, self.phase_1_min_distance[n])
+        """
+        An implementation of the IDA* search algorithm, which is used to find the minimum number
+        of moves to reduce the corner and edge orientation coordinates to 0 and the ud slice
+        coordinate to 0 (i.e. the precondition to move on to phase 2).
+        """
+        # If the estimated distance to complete phase 1 is 0, then we move on to phase 2
         if self.phase_1_min_distance[n] == 0:
-            # Begin phase 2
+            # Move to phase 2
             self.phase_1_moves_index = n
             return self._phase_2(n)
         elif self.phase_1_min_distance[n] <= depth:
+            # The range 0...5 represents the 6 main moves (U, R, F, D, L, B) in that order
             for i in range(6):
                 # We don't want to turn the same and opposite face on consecutive moves
-                if n > 0 and self.axis[n - 1] in (i, i + 3):
+                if n > 0 and self.moves_face[n - 1] in (i, i + 3):
                     continue
 
+                # 1 => Clockwise, 2 => Clockwise twice, 3 => Counterclockwise
                 for j in range(1, 4):
-                    self.axis[n] = i
-                    self.power[n] = j
+                    self.moves_face[n] = i
+                    self.moves_turn[n] = j
                     move_num = 3 * i + j - 1
 
                     # Update phase 1 coordinates using tables and heuristic
@@ -136,18 +150,18 @@ class KociembaSolver(Solver):
                     if next >= 0:
                         return next
 
+        # Unable to find an adequate solution at this depth
         return -1
 
     def _phase_2(self, n: int) -> int:
-        cubie_cube = self.face_cube.to_cubie_cube()
-
+        # Perform all the moves that we have done in phase 1 to the cubie cube
         for i in range(n):
-            for j in range(self.power[i]):
-                cubie_cube.move(self.axis[i])
+            for j in range(self.moves_turn[i]):
+                self.cubie_cube.move(self.moves_face[i])
 
-        self.phase_2_corner[n] = cubie_cube.phase_2_corner
-        self.phase_2_edge[n] = cubie_cube.phase_2_edge
-        self.phase_2_ud_slice[n] = cubie_cube.phase_2_ud_slice
+        self.phase_2_corner[n] = self.cubie_cube.phase_2_corner
+        self.phase_2_edge[n] = self.cubie_cube.phase_2_edge
+        self.phase_2_ud_slice[n] = self.cubie_cube.phase_2_ud_slice
         self.phase_2_min_distance[n] = self._phase_2_heuristic(n)
 
         for depth in range(self.max_moves_length - n):
@@ -167,21 +181,24 @@ class KociembaSolver(Solver):
         )
 
     def _phase_2_search(self, n: int, depth: int) -> int:
+        # If the estimated distance to complete phase 2 is 0, then we return the current depth, `n`.
         if self.phase_2_min_distance[n] == 0:
             return n
         elif self.phase_2_min_distance[n] <= depth:
+            # The range 0...5 represents the 6 main moves (U, R, F, D, L, B) in that order
             for i in range(6):
                 # We don't want to turn the same and opposite face on consecutive moves
-                if n > 0 and self.axis[n - 1] in (i, i + 3):
+                if n > 0 and self.moves_face[n - 1] in (i, i + 3):
                     continue
 
+                # 1 => Clockwise, 2 => Clockwise twice, 3 => Counterclockwise
                 for j in range(1, 4):
                     # We limit moves to U*, D*, R2, L2, F2, B2
                     if i in (1, 2, 4, 5) and j != 2:
                         continue
 
-                    self.axis[n] = i
-                    self.power[n] = j
+                    self.moves_face[n] = i
+                    self.moves_turn[n] = j
 
                     move_num = 3 * i + j - 1
 
@@ -201,7 +218,7 @@ class KociembaSolver(Solver):
 
         return -1
 
-    def _generate_moves(self, high: int, low: int = 0):
+    def _generate_moves(self, length: int):
         def recover_move(axis_power):
             axis, power = axis_power
             if power == 1:
@@ -212,7 +229,7 @@ class KociembaSolver(Solver):
                 return Face(axis).name + "'"
             raise RuntimeError("Invalid move in solution.")
 
-        return list(map(recover_move, zip(self.axis[low:high], self.power[low:high])))
+        return list(map(recover_move, zip(self.moves_face[:length], self.moves_turn[:length])))
 
     def _validate_cube(self):
         def get_status():
