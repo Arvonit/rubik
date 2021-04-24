@@ -8,15 +8,19 @@ import Results from './components/Results';
 
 function App() {
   const DEFAULT_CUBE = 'RRRRRRRRRBBBBBBBBBWWWWWWWWWGGGGGGGGGYYYYYYYYYOOOOOOOOO';
+
+  // State variables
+
   const [cube, setCube] = useState(DEFAULT_CUBE);
   const [selectedColor, setSelectedColor] = useState('');
   const [showAlert, toggleAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [showSuccess, toggleSuccess] = useState(false);
   const [alertText, setAlertText] = useState('');
   const [originalCube, setOriginalCube] = useState('');
   const [moves, setMoves] = useState([]);
   const [timeToSolve, setTimeToSolve] = useState(0);
+
+  // Helper functions
 
   function onSolve() {
     if (showAlert) {
@@ -30,24 +34,24 @@ function App() {
       .then(response => response.json())
       .then(response => {
         console.log(response);
-        setIsLoading(false);
         if (response.error !== undefined) {
           setAlertText(response.error);
           toggleAlert(true);
           return;
         }
 
-        // setMoves(`Original Cube: ${cube}\n` + response.moves.toString());
         setMoves(response.moves);
         setTimeToSolve(response.timeToSolve);
         setOriginalCube(cube);
         setCube(response.cube);
       })
       .catch(error => {
-        setIsLoading(false);
         setAlertText('Unable to connect to the server.');
         toggleAlert(true);
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -80,6 +84,8 @@ function App() {
     toggleAlert(false);
     setCube(cubeString);
   }
+
+  // UI Root
 
   return (
     <Container maxWidth="5xl" centerContent>

@@ -1,11 +1,7 @@
 import { Heading } from '@chakra-ui/layout';
 
 function Header() {
-  return (
-    // <Center>
-    <Heading>Rubik's Cube Solver</Heading>
-    // </Center>
-  );
+  return <Heading>Rubik's Cube Solver</Heading>;
 }
 
 export default Header;

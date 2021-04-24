@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/button';
-import { Box, HStack, SimpleGrid, Stack, Text, VStack } from '@chakra-ui/layout';
-import React, { ReactElement, useState } from 'react';
+import { Box, HStack, SimpleGrid, VStack } from '@chakra-ui/layout';
+import { useState } from 'react';
 import Piece from './Piece';
 
 interface Props {
@@ -11,7 +11,10 @@ interface Props {
 }
 
 function Cube({ cube, setCube, selectedColor, setSelectedColor }: Props) {
+  // Maintain state of the background color of the color chooser
+  // We want the background of the chooser to reflect the color selected (or not selected).
   const [backgroundColor, setBackgroundColor] = useState('');
+
   const Color = Object.freeze({
     WHITE: 'gray.100',
     BLUE: 'blue.400',
@@ -20,12 +23,6 @@ function Cube({ cube, setCube, selectedColor, setSelectedColor }: Props) {
     GREEN: 'green.400',
     YELLOW: 'yellow.300'
   });
-  // const WHITE_COLOR = 'gray.100';
-  // const BLUE_COLOR = 'blue.400';
-  // const RED_COLOR = 'red.500';
-  // const ORANGE_COLOR = 'orange.300';
-  // const GREEN_COLOR = 'green.400';
-  // const YELLOW_COLOR = 'yellow.300';
 
   function changeSelectedColor(color: string) {
     console.log(color);
@@ -58,19 +55,6 @@ function Cube({ cube, setCube, selectedColor, setSelectedColor }: Props) {
         break;
     }
   }
-
-  // function createPieceFromColor(color: string) {
-  //   return (
-  //     <Box
-  //       backgroundColor={color}
-  //       border="2px"
-  //       borderColor="blackAlpha.200"
-  //       height="50px"
-  //       width="50px"
-  //       onClick={event => console.log(event)}
-  //     />
-  //   );
-  // }
 
   function cubeColorToBackgroundColor(color: string): string {
     switch (color) {
