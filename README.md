@@ -5,12 +5,12 @@ class.
 
 ## Setup
 
-This project uses `pipenv` to manage dependencies in the Python part and `npm` in the JavaScript
+This project uses `poetry` to manage dependencies in the Python part and `npm` in the JavaScript
 part, so you must have both installed. To download the python dependencies, you simply run 
-`pipenv install`. You can than forward any shell command to `pipenv` using `pipenv run`. 
-For instance, to run an interactive session of python, use `pipenv run python3`. `pipenv` also
-includes a shell you can use to avoid the `pipenv run` prefix to shell commands. You can launch 
-this with `pipenv shell`. To download the node dependencies, you similarly run `npm install`.
+`poetry install`. You can than forward any shell command to `poetry` using `poetry run`. 
+For instance, to run an interactive session of python, use `poetry run python3`. `poetry` also
+includes a shell you can use to avoid the `poetry run` prefix to shell commands. You can launch 
+this with `poetry shell`. To download the node dependencies, you similarly run `npm install`.
 
 ## Usage
 

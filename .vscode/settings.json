@@ -3,5 +3,5 @@
     "python.analysis.extraPaths": [
         "./rubik"
     ],
-    "python.pythonPath": "/Users/arvind/.local/share/virtualenvs/rubik-5RewJ1rE/bin/python",
+    "python.pythonPath": "/Users/arvind/Library/Caches/pypoetry/virtualenvs/rubik-AGT0nqlw-py3.9/bin/python",
 }
