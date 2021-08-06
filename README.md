@@ -5,12 +5,12 @@ class.
 
 ## Setup
 
-This project uses `poetry` to manage dependencies in the Python part and `npm` in the JavaScript
+This project uses `poetry` to manage dependencies for the Python part and `npm` for the JavaScript
 part, so you must have both installed. To download the python dependencies, you simply run 
 `poetry install`. You can than forward any shell command to `poetry` using `poetry run`. 
 For instance, to run an interactive session of python, use `poetry run python3`. `poetry` also
-includes a shell you can use to avoid the `poetry run` prefix to shell commands. You can launch 
-this with `poetry shell`. To download the node dependencies, you similarly run `npm install`.
+includes a shell to avoid the `poetry run` prefix to shell commands. You can launch this with 
+`poetry shell`. To download the node dependencies, you similarly run `npm install`.
 
 ## Usage
 
@@ -69,6 +69,8 @@ BBB RRR GGG OOO
 ```
 
 ### Website
+
+![Screenshot of the website](website.png)
 
 The GUI portion of this project is a website that allows you to color a map of a Rubik's Cube 
 in its unsolved state. Once you are done filling it in, you can press the Solve button and the 
