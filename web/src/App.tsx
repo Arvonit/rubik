@@ -86,26 +86,30 @@ function App() {
   }
 
   // UI Root
-
   return (
     <Container maxWidth="5xl" centerContent>
       <VStack>
         <Header />
+
         {showAlert && (
           <Alert status="error">
             <AlertIcon />
             {alertText}
           </Alert>
         )}
+
         <Cube
           cube={cube}
           setCube={validateCube}
           selectedColor={selectedColor}
           setSelectedColor={setSelectedColor}
         />
+
+        {/* Show the results only if we do not get an error from the server */}
         {!showAlert && (
           <Results originalCube={originalCube} moves={moves} timeToSolve={timeToSolve} />
         )}
+
         <Options cube={cube} setCube={validateCube} onSolve={onSolve} isLoading={isLoading} />
       </VStack>
     </Container>

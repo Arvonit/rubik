@@ -10,7 +10,7 @@ from pieces import Face
 class KociembaSolver(Solver):
     """
     A basic implementation of Herbert Kociemba's Two Phase algorithm. Further details, including 
-    the rationale behind certain design decisions of this algorithm, can be found on Kociemba's
+    the rationale behind certain design decisions of this algorithm, can be found on Kociemba's 
     website (http://kociemba.org/cube.htm).
     """
 
@@ -69,6 +69,7 @@ class KociembaSolver(Solver):
         self.start = time()
 
         # My implementation of Kocimeba
+        # We first run phase 1 and when it ends, phase 2 will automatically be called
         self._phase_1()
 
         # Kociemba implemented in C
@@ -181,7 +182,7 @@ class KociembaSolver(Solver):
         )
 
     def _phase_2_search(self, n: int, depth: int) -> int:
-        # If the estimated distance to complete phase 2 is 0, then we return the current depth, `n`.
+        # If the estimated distance to complete phase 2 is 0, then we return the current depth, `n`
         if self.phase_2_min_distance[n] == 0:
             return n
         elif self.phase_2_min_distance[n] <= depth:

@@ -11,7 +11,10 @@ interface Props {
 function Options({ cube, setCube, onSolve, isLoading }: Props) {
   return (
     <>
-      <Input placeholder="54 char cube string" onChange={event => setCube(event.target.value)} />
+      <Input
+        placeholder="54-Character Cube String"
+        onChange={event => setCube(event.target.value)}
+      />
       <Button isLoading={isLoading} loadingText="Solving" colorScheme="blue" onClick={onSolve}>
         Solve
       </Button>

@@ -2,6 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://rubik.arvind.dev",
   "dependencies": {
     "@chakra-ui/react": "^1.5.1",
     "@emotion/react": "^11.1.5",

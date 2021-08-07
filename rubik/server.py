@@ -4,10 +4,11 @@ from fastapi.params import Query
 from fastapi.middleware.cors import CORSMiddleware
 from cube import Cube
 from kociembasolver import KociembaSolver
-from solver import Solver
 
 
 app = FastAPI()
+
+# TODO: Remove
 
 origins = [
     "http://localhost:3000",
@@ -25,7 +26,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root(cube_str: str = Query(..., alias="cube", min_length=54, max_length=54)):
-    print(cube_str)
+    # print(cube_str)
     cube: Cube
     solver: KociembaSolver
     try:

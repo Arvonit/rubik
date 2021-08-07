@@ -15,14 +15,14 @@ function Cube({ cube, setCube, selectedColor, setSelectedColor }: Props) {
   // We want the background of the chooser to reflect the color selected (or not selected).
   const [backgroundColor, setBackgroundColor] = useState('');
 
-  const Color = Object.freeze({
-    WHITE: 'gray.100',
-    BLUE: 'blue.400',
-    RED: 'red.500',
-    ORANGE: 'orange.300',
-    GREEN: 'green.400',
-    YELLOW: 'yellow.300'
-  });
+  enum Color {
+    WHITE = 'gray.100',
+    BLUE = 'blue.400',
+    RED = 'red.500',
+    ORANGE = 'orange.300',
+    GREEN = 'green.400',
+    YELLOW = 'yellow.300'
+  }
 
   function changeSelectedColor(color: string) {
     console.log(color);
@@ -126,12 +126,12 @@ function Cube({ cube, setCube, selectedColor, setSelectedColor }: Props) {
 
       {/* Color chooser */}
       <Box backgroundColor={backgroundColor} padding={4}>
-        <Button onClick={event => changeSelectedColor('W')}></Button>
-        <Button colorScheme="blue" onClick={event => changeSelectedColor('B')}></Button>
-        <Button colorScheme="red" onClick={event => changeSelectedColor('R')}></Button>
-        <Button colorScheme="orange" onClick={event => changeSelectedColor('O')}></Button>
-        <Button colorScheme="green" onClick={event => changeSelectedColor('G')}></Button>
-        <Button colorScheme="yellow" onClick={event => changeSelectedColor('Y')}></Button>
+        <Button onClick={event => changeSelectedColor('W')} />
+        <Button colorScheme="blue" onClick={event => changeSelectedColor('B')} />
+        <Button colorScheme="red" onClick={event => changeSelectedColor('R')} />
+        <Button colorScheme="orange" onClick={event => changeSelectedColor('O')} />
+        <Button colorScheme="green" onClick={event => changeSelectedColor('G')} />
+        <Button colorScheme="yellow" onClick={event => changeSelectedColor('Y')} />
       </Box>
     </VStack>
   );
