@@ -309,7 +309,7 @@ requests = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.9"
+python-versions = "3.9.6"
 content-hash = "8005f22e24966bf8856c40b9e53a3a4910109c63dff3cf8f8f60662d1f90c7e7"
 
 [metadata.files]
