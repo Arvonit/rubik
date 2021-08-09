@@ -15,6 +15,7 @@ kociemba = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"
+pipreqs = "^0.4.10"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
