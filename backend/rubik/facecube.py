@@ -1,5 +1,5 @@
-from cubiecube import CubieCube
-from pieces import Face, Corner, Edge, Facelet
+from rubik.cubiecube import CubieCube
+from rubik.pieces import Face, Corner, Edge, Facelet
 
 
 class FaceCube:

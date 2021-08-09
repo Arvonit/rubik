@@ -1,10 +1,10 @@
 import numpy as np
-from coordcube import CoordCube
-from cube import Cube
-from solver import Solver
 from time import time
-from tables import Tables
-from pieces import Face
+from rubik.coordcube import CoordCube
+from rubik.cube import Cube
+from rubik.solver import Solver
+from rubik.tables import Tables
+from rubik.pieces import Face
 
 
 class KociembaSolver(Solver):

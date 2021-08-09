@@ -25,7 +25,7 @@ THE SOFTWARE.
 import json
 import os
 
-from cubiecube import MOVE_CUBE, CubieCube
+from rubik.cubiecube import MOVE_CUBE, CubieCube
 
 
 class PruningTable:

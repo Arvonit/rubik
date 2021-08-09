@@ -1,7 +1,7 @@
 from __future__ import annotations
 from functools import reduce
 from math import comb
-from pieces import Corner, Edge
+from rubik.pieces import Corner, Edge
 
 
 class CubieCube:

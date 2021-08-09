@@ -1,6 +1,6 @@
 from __future__ import annotations
-from cubiecube import CubieCube
-from tables import Tables
+from rubik.cubiecube import CubieCube
+from rubik.tables import Tables
 
 
 # TODO: Move functionality from CubieCube to CoordCube since that makes more sense

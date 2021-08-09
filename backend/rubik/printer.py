@@ -1,6 +1,6 @@
 from inspect import cleandoc
 import numpy as np
-from cube import Cube
+from rubik.cube import Cube
 from stringcolor import cs
 
 

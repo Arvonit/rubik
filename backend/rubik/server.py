@@ -2,8 +2,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.params import Query
 from fastapi.middleware.cors import CORSMiddleware
-from cube import Cube
-from kociembasolver import KociembaSolver
+from rubik.cube import Cube
+from rubik.kociembasolver import KociembaSolver
 
 
 app = FastAPI()

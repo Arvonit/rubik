@@ -1,4 +1,4 @@
-from cube import Cube
+from rubik.cube import Cube
 from abc import ABC, abstractmethod
 
 

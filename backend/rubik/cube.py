@@ -1,6 +1,6 @@
 import numpy as np
 from random import choice
-from facecube import FaceCube
+from rubik.facecube import FaceCube
 
 
 class Cube:

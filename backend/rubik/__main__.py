@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
-from cube import Cube
-from kociembasolver import KociembaSolver
-from printer import print_cube
+from rubik.cube import Cube
+from rubik.kociembasolver import KociembaSolver
+from rubik.printer import print_cube
 
 
 def main():
