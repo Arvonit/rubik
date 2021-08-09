@@ -30,7 +30,7 @@ function App() {
     setIsLoading(true);
     toggleAlert(false);
 
-    fetch(`http://localhost:8000/?cube=${cube}`)
+    fetch(`https://arvonit-rubik.herokuapp.com/?cube=${cube}`)
       .then(response => response.json())
       .then(response => {
         console.log(response);
