@@ -7,14 +7,12 @@ from kociembasolver import KociembaSolver
 
 
 app = FastAPI()
-
-# TODO: Remove
-
 origins = [
     "http://localhost:3000",
-    "localhost:3000"
+    "localhost:3000",
+    "rubik.arvind.dev",
+    "https://rubik.arvind.dev"
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -41,6 +39,7 @@ async def root(cube_str: str = Query(..., alias="cube", min_length=54, max_lengt
         return {"error": str(e)}
 
     return {"cube": str(cube), "moves": solver.moves, "timeToSolve": solver.time_to_solve}
+
 
 if __name__ == "__main__":
     uvicorn.run("server:app", host="localhost", port=8000, reload=True)
