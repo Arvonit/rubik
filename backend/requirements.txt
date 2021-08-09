@@ -1,0 +1,5 @@
+string_color==1.2.1
+prettytable==2.1.0
+numpy==1.21.1
+uvicorn==0.13.4
+fastapi==0.68.0
