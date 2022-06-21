@@ -13,15 +13,15 @@ class CubieCube:
         :param eo: A list of the edge orientations
         """
         if cp is not None and co is not None and ep is not None and eo is not None:
-            self.cp = cp
-            self.co = co
-            self.ep = ep
-            self.eo = eo
+            self.corner_permutations = cp
+            self.corner_orientations = co
+            self.edge_permutations = ep
+            self.edge_orientations = eo
         else:
-            self.cp = [corner for corner in Corner]
-            self.co = [0 for i in range(len(Corner))]
-            self.ep = [edge for edge in Edge]
-            self.eo = [0 for i in range(len(Edge))]
+            self.corner_permutations = [corner for corner in Corner]
+            self.corner_orientations = [0 for i in range(len(Corner))]
+            self.edge_permutations = [edge for edge in Edge]
+            self.edge_orientations = [0 for i in range(len(Edge))]
 
     def choose(self, n: int, k: int) -> int:
         if 0 <= k <= n:
@@ -34,22 +34,24 @@ class CubieCube:
         co = []
 
         for corner in Corner:
-            cp.append(self.cp[other.cp[corner]])
-            co.append((self.co[other.cp[corner]] + other.co[corner]) % 3)
+            cp.append(self.corner_permutations[other.corner_permutations[corner]])
+            co.append((self.corner_orientations[other.corner_permutations[corner]] +
+                       other.corner_orientations[corner]) % 3)
 
-        self.co = co
-        self.cp = cp
+        self.corner_orientations = co
+        self.corner_permutations = cp
 
     def edge_multiply(self, other: CubieCube):
         ep = []
         eo = []
 
         for edge in Edge:
-            ep.append(self.ep[other.ep[edge]])
-            eo.append((other.eo[edge] + self.eo[other.ep[edge]]) % 2)
+            ep.append(self.edge_permutations[other.edge_permutations[edge]])
+            eo.append(
+                (other.edge_orientations[edge] + self.edge_orientations[other.edge_permutations[edge]]) % 2)
 
-        self.eo = eo
-        self.ep = ep
+        self.edge_orientations = eo
+        self.edge_permutations = ep
 
     def multiply(self, other: CubieCube):
         self.corner_multiply(other)
@@ -69,7 +71,7 @@ class CubieCube:
         Get the corner orientation coordinate of this cube. This is needed for phase 1 of the
         kociemba algorithm.
         """
-        return reduce(lambda x, y: 3 * x + y, self.co[:7])
+        return reduce(lambda x, y: 3 * x + y, self.corner_orientations[:7])
 
     @phase_1_corner.setter
     def phase_1_corner(self, new: int):
@@ -77,11 +79,11 @@ class CubieCube:
 
         for i in range(7):
             x = new % 3
-            self.co[6 - i] = x
+            self.corner_orientations[6 - i] = x
             total += x
             new //= 3
 
-        self.co[7] = (-total) % 3
+        self.corner_orientations[7] = (-total) % 3
 
     @property
     def phase_1_edge(self):
@@ -89,7 +91,7 @@ class CubieCube:
         Get the edge orientation coordinate of this cube. This is needed for phase 1 of the 
         kociemba algorithm.
         """
-        return reduce(lambda x, y: 2 * x + y, self.eo[:11])
+        return reduce(lambda x, y: 2 * x + y, self.edge_orientations[:11])
 
     @phase_1_edge.setter
     def phase_1_edge(self, new: int):
@@ -97,11 +99,11 @@ class CubieCube:
 
         for i in range(11):
             x = new % 2
-            self.eo[10 - i] = x
+            self.edge_orientations[10 - i] = x
             total += x
             new //= 2
 
-        self.eo[11] = (-total) % 2
+        self.edge_orientations[11] = (-total) % 2
 
     @property
     def phase_1_ud_slice(self):
@@ -113,7 +115,7 @@ class CubieCube:
         seen = 0
 
         for i in range(12):
-            if 8 <= self.ep[i] < 12:
+            if 8 <= self.edge_permutations[i] < 12:
                 seen += 1
             elif seen >= 1:
                 ud_slice += self.choose(i, seen - 1)
@@ -138,20 +140,20 @@ class CubieCube:
 
         # Invalidate edges
         for i in range(12):
-            self.ep[i] = Edge.DB
+            self.edge_permutations[i] = Edge.DB
 
         # First position the slice edges
         for i in range(11, -1, -1):
             if new - self.choose(i, seen) < 0:
-                self.ep[i] = udslice_edges[seen]
+                self.edge_permutations[i] = udslice_edges[seen]
                 seen -= 1
             else:
                 new -= self.choose(i, seen)
 
         # Then the remaining edges
         for i in range(12):
-            if self.ep[i] == Edge.DB:
-                self.ep[i] = other_edges[x]
+            if self.edge_permutations[i] == Edge.DB:
+                self.edge_permutations[i] = other_edges[x]
                 x += 1
 
     @property
@@ -165,7 +167,7 @@ class CubieCube:
         for j in range(7, 0, -1):
             s = 0
             for i in range(j):
-                if self.cp[i] > self.cp[j]:
+                if self.corner_permutations[i] > self.corner_permutations[j]:
                     s += 1
             corner = j * (corner + s)
 
@@ -185,7 +187,7 @@ class CubieCube:
             permutations[i + 1] = corners.pop(i + 1 - coeffecients[i])
 
         permutations[0] = corners[0]
-        self.cp = permutations
+        self.corner_permutations = permutations
 
     @property
     def phase_2_edge(self):
@@ -199,7 +201,7 @@ class CubieCube:
         for j in range(7, 0, -1):
             s = 0
             for i in range(j):
-                if self.ep[i] > self.ep[j]:
+                if self.edge_permutations[i] > self.edge_permutations[j]:
                     s += 1
             edge = j * (edge + s)
 
@@ -219,7 +221,7 @@ class CubieCube:
             permutations[i + 1] = edges.pop(i + 1 - coeffecients[i])
 
         permutations[0] = edges[0]
-        self.ep[:8] = permutations
+        self.edge_permutations[:8] = permutations
 
     @property
     def phase_2_ud_slice(self):
@@ -227,7 +229,7 @@ class CubieCube:
         Get the phase 2 UD slice coordinate of this cube. This is determined by the permutations
         of the 4 UD slice edges. This is needed for phase 2 of the kociemba algorithm.
         """
-        ud_slice = self.ep[8:]
+        ud_slice = self.edge_permutations[8:]
         ret = 0
 
         for j in range(3, 0, -1):
@@ -253,7 +255,7 @@ class CubieCube:
             permutations[i + 1] = ud_slice_edges.pop(i + 1 - coeffecients[i])
 
         permutations[0] = ud_slice_edges[0]
-        self.ep[8:] = permutations
+        self.edge_permutations[8:] = permutations
 
     # FUNCTIONS TO DETERMINE THE VALIDITY OF CUBE
 
@@ -262,7 +264,7 @@ class CubieCube:
         s = 0
         for i in range(7, 0, -1):
             for j in range(i - 1, -1, -1):
-                if self.cp[j] > self.cp[i]:
+                if self.corner_permutations[j] > self.corner_permutations[i]:
                     s += 1
 
         return s % 2
@@ -272,7 +274,7 @@ class CubieCube:
         s = 0
         for i in range(11, 0, -1):
             for j in range(i - 1, -1, -1):
-                if self.ep[j] > self.ep[i]:
+                if self.edge_permutations[j] > self.edge_permutations[i]:
                     s += 1
 
         return s % 2
@@ -282,26 +284,26 @@ class CubieCube:
         edge_count = [0 for edge in Edge]
         corner_count = [0 for corner in Corner]
 
-        for e in range(12):
-            edge_count[self.ep[e]] += 1
+        for i in range(12):
+            edge_count[self.edge_permutations[i]] += 1
         for i in range(12):
             if edge_count[i] != 1:
                 return -2
 
         for i in range(12):
-            total += self.eo[i]
+            total += self.edge_orientations[i]
         if total % 2 != 0:
             return -3
 
-        for c in range(8):
-            corner_count[self.cp[c]] += 1
+        for i in range(8):
+            corner_count[self.corner_permutations[i]] += 1
         for i in range(8):
             if corner_count[i] != 1:
                 return -4
 
         total = 0
         for i in range(8):
-            total += self.co[i]
+            total += self.corner_orientations[i]
 
         if total % 3 != 0:
             return -5
@@ -312,7 +314,7 @@ class CubieCube:
 
 
 # Below is the code for `MOVE_CUBE`, which is needed for generating the move tables.
-# Written by Tom Begley.
+# Copyright (c) 2020 Tom Begley.
 _cpU = (
     Corner.UBR,
     Corner.URF,
@@ -477,32 +479,32 @@ _eoB = (0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1)
 
 MOVE_CUBE = [CubieCube() for i in range(6)]
 
-MOVE_CUBE[0].cp = _cpU
-MOVE_CUBE[0].co = _coU
-MOVE_CUBE[0].ep = _epU
-MOVE_CUBE[0].eo = _eoU
+MOVE_CUBE[0].corner_permutations = _cpU
+MOVE_CUBE[0].corner_orientations = _coU
+MOVE_CUBE[0].edge_permutations = _epU
+MOVE_CUBE[0].edge_orientations = _eoU
 
-MOVE_CUBE[1].cp = _cpR
-MOVE_CUBE[1].co = _coR
-MOVE_CUBE[1].ep = _epR
-MOVE_CUBE[1].eo = _eoR
+MOVE_CUBE[1].corner_permutations = _cpR
+MOVE_CUBE[1].corner_orientations = _coR
+MOVE_CUBE[1].edge_permutations = _epR
+MOVE_CUBE[1].edge_orientations = _eoR
 
-MOVE_CUBE[2].cp = _cpF
-MOVE_CUBE[2].co = _coF
-MOVE_CUBE[2].ep = _epF
-MOVE_CUBE[2].eo = _eoF
+MOVE_CUBE[2].corner_permutations = _cpF
+MOVE_CUBE[2].corner_orientations = _coF
+MOVE_CUBE[2].edge_permutations = _epF
+MOVE_CUBE[2].edge_orientations = _eoF
 
-MOVE_CUBE[3].cp = _cpD
-MOVE_CUBE[3].co = _coD
-MOVE_CUBE[3].ep = _epD
-MOVE_CUBE[3].eo = _eoD
+MOVE_CUBE[3].corner_permutations = _cpD
+MOVE_CUBE[3].corner_orientations = _coD
+MOVE_CUBE[3].edge_permutations = _epD
+MOVE_CUBE[3].edge_orientations = _eoD
 
-MOVE_CUBE[4].cp = _cpL
-MOVE_CUBE[4].co = _coL
-MOVE_CUBE[4].ep = _epL
-MOVE_CUBE[4].eo = _eoL
+MOVE_CUBE[4].corner_permutations = _cpL
+MOVE_CUBE[4].corner_orientations = _coL
+MOVE_CUBE[4].edge_permutations = _epL
+MOVE_CUBE[4].edge_orientations = _eoL
 
-MOVE_CUBE[5].cp = _cpB
-MOVE_CUBE[5].co = _coB
-MOVE_CUBE[5].ep = _epB
-MOVE_CUBE[5].eo = _eoB
+MOVE_CUBE[5].corner_permutations = _cpB
+MOVE_CUBE[5].corner_orientations = _coB
+MOVE_CUBE[5].edge_permutations = _epB
+MOVE_CUBE[5].edge_orientations = _eoB

@@ -3,7 +3,12 @@
 A 3x3 Rubik's Cube solver written for my honors project in my Data Structures and Algorithms 
 class.
 
-## Setup
+## Overview
+
+This project is primarily a web application, so it is divided into frontend and backend modules. 
+The backend is written in Python and does most of the heavy lifting as my data structures 
+class was taught in Python and the interface was originally a CLI. The frontend is written in TypeScript and uses React.
+
 
 This project uses `poetry` to manage dependencies for the Python part and `npm` for the JavaScript
 part, so you must have both installed. To download the python dependencies, you simply run 
@@ -14,7 +19,7 @@ includes a shell to avoid the `poetry run` prefix to shell commands. You can lau
 
 ## Usage
 
-To use this program, you have two interfaces: a CLI and a website.
+To use this program, you have two interfaces: a CLI and a [website](https://rubik.arvind.dev).
 
 ### CLI
 
@@ -41,7 +46,7 @@ It is made up of the 6 colors of a cube — **W**hite, **B**lue, **R**ed, **G**r
 If the 54-character cube string is not given, the program will automatically generate one from 
 a randomly scrambled cube and solve that one for you. An example is shown below.
 
-```bash
+```
 $ python3 rubik WRWGYBWRORYRYBGOWRBWYRRBYGRGOOYGWBOBGBGGORWWBGOYBWYYOO
 
     WRW
@@ -55,7 +60,7 @@ OWR YGR BOB WWB
     YOO
 
 The solution requires 25 moves and took 2.03975 seconds.
-"F L F U B R B2 D R F U2 L2 U' L2 B2 U' F2 D L2 B2 D' R2 F2 U2 L2"
+F L F U B R B2 D R F U2 L2 U' L2 B2 U' F2 D L2 B2 D' R2 F2 U2 L2
 
     YYY
     YYY
@@ -68,18 +73,23 @@ BBB RRR GGG OOO
     WWW
 ```
 
+<!-- ```python
+print()
+``` -->
+
 ### Website
 
 ![Screenshot of the website](website.png)
 
-The GUI portion of this project is a website that allows you to color a map of a Rubik's Cube 
-in its unsolved state. Once you are done filling it in, you can press the Solve button and the 
-website will show you the cube in its solved state, along with the moves to solve it.
+The website allows you to color a map of a Rubik's Cube in its unsolved state. Once you are done 
+filling it in, you can press the Solve button and the website will show you the cube in its solved 
+state, along with the moves to solve it.
 
 The website is made up of a frontend written using React and a very simple backend written using 
 FastAPI. The frontend makes an HTTP GET request when the solve button is pressed, passing a 
 54-character string representation of the cube as a parameter. The backend returns a JSON 
 containing the solved cube string, a list of moves, and the time it took to solve.
 
-To start the website, run `npm start` to start the frontend and `python3 rubik/server.py` to start
-the backend.
+To use the website, click [here](https://rubik.arvind.dev). If you want to run it locally, 
+run `npm start` in the `frontend` directory and run `poetry run python3 rubik/server.py` in the 
+`backend` directory.

@@ -12,6 +12,7 @@ fastapi = "^0.65.1"
 uvicorn = "^0.13.4"
 prettytable = "^2.1.0"
 kociemba = "^1.2.1"
+requests = "^2.26.0"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"

@@ -24,8 +24,10 @@ THE SOFTWARE.
 
 import json
 import os
+import requests
 
 from rubik.cubiecube import MOVE_CUBE, CubieCube
+from os import path
 
 
 class PruningTable:
@@ -99,6 +101,19 @@ class Tables:
                 tables["edge4_corner_prune"], cls.CORNER
             )
         else:
+            # TODO: Attempt to download a pre-generated one
+            # response = requests.get("https://www.dropbox.com/s/1g77l5ih0y7vpae/tables.json",
+            #                         allow_redirects=True)
+            # print(response.status_code)
+            # print(response.content)
+            # if response.status_code != 200 or not path.exists("tables.json"):
+            #     print("failed")
+            # else:
+            #     print("succeeded")
+            # return
+
+            # Otherwise, generate it mnaually
+
             print("Generating move and pruning tables. May take a few minutes to complete.")
             # ----------  Phase 1 move tables  ---------- #
             print("Generating twist table")

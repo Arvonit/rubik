@@ -1,6 +1,6 @@
 from unittest import TestCase
-from kociembasolver import KociembaSolver
-from cube import Cube
+from rubik.kociembasolver import KociembaSolver
+from rubik.cube import Cube
 
 
 class TestKociembaSolver(TestCase):
@@ -9,3 +9,4 @@ class TestKociembaSolver(TestCase):
         solver = KociembaSolver(cube)
         solver.solve()
         self.assertEqual(cube.is_solved(), True)
+        print("Tests passed!")

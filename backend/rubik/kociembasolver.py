@@ -220,32 +220,30 @@ class KociembaSolver(Solver):
         return -1
 
     def _generate_moves(self, length: int):
+        # TODO: Redo to be more like Java code
         def recover_move(axis_power):
             axis, power = axis_power
             if power == 1:
                 return Face(axis).name
-            if power == 2:
+            elif power == 2:
                 return Face(axis).name + "2"
-            if power == 3:
+            elif power == 3:
                 return Face(axis).name + "'"
             raise RuntimeError("Invalid move in solution.")
 
         return list(map(recover_move, zip(self.moves_face[:length], self.moves_turn[:length])))
 
     def _validate_cube(self):
-        def get_status():
-            count = [0 for i in range(6)]
+        count = [0 for i in range(6)]
 
-            for char in self.cube.face_str():
-                count[Face[char]] += 1
+        for char in self.cube.face_str():
+            count[Face[char]] += 1
 
-            for i in range(6):
-                if count[i] != 9:
-                    return -1
+        for i in range(6):
+            if count[i] != 9:
+                return -1
 
-            return self.cubie_cube.validate()
-
-        status = get_status()
+        status = self.cubie_cube.validate()
         error_message = ""
 
         if status == 0:

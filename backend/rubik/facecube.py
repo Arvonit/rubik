@@ -75,21 +75,21 @@ class FaceCube:
             for j in Corner:
                 if color_1 == FaceCube.CORNER_COLORS[j][1] and \
                    color_2 == FaceCube.CORNER_COLORS[j][2]:
-                    cubie_cube.cp[i] = j
-                    cubie_cube.co[i] = orientation
+                    cubie_cube.corner_permutations[i] = j
+                    cubie_cube.corner_orientations[i] = orientation
                     break
 
         for i in Edge:
             for j in Edge:
                 if self.pieces[FaceCube.EDGE_FACELETS[i][0]] == FaceCube.EDGE_COLORS[j][0] and \
                    self.pieces[FaceCube.EDGE_FACELETS[i][1]] == FaceCube.EDGE_COLORS[j][1]:
-                    cubie_cube.ep[i] = j
-                    cubie_cube.eo[i] = 0
+                    cubie_cube.edge_permutations[i] = j
+                    cubie_cube.edge_orientations[i] = 0
                     break
                 if self.pieces[FaceCube.EDGE_FACELETS[i][0]] == FaceCube.EDGE_COLORS[j][1] and \
                    self.pieces[FaceCube.EDGE_FACELETS[i][1]] == FaceCube.EDGE_COLORS[j][0]:
-                    cubie_cube.ep[i] = j
-                    cubie_cube.eo[i] = 1
+                    cubie_cube.edge_permutations[i] = j
+                    cubie_cube.edge_orientations[i] = 1
                     break
 
         return cubie_cube
