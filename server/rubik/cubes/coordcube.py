@@ -25,8 +25,8 @@ class CoordCube:
     @classmethod
     def from_cubie_cube(cls, cube: CubieCube) -> CoordCube:
         """
-        Converts the current `CubieCube` to a `CoordCube`. We use a class method instead of an
-        instance method in `CubieCube` because of circular import errors.
+        Converts the current `CubieCube` to a `CoordCube`. We use a class method here
+        instead of an instance method in `CubieCube` because of circular import errors.
         """
         return CoordCube(
             cube.phase_1_corner,

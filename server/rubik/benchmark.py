@@ -37,8 +37,8 @@ def benchmark(
 
 def main():
     """
-    Generates a series of statistics about the running time and move count for increasingly shuffled
-    cubes. These statistics are calculated over a 100 trials.
+    Generates a series of statistics about the running time and move count for
+    increasingly shuffled cubes. These statistics are calculated over a 100 trials.
     """
     table = PrettyTable()
     table.title = "My Implementation"

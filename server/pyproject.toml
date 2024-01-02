@@ -14,11 +14,9 @@ prettytable = "^3.9.0"
 kociemba = "^1.2.1"
 requests = "^2.31.0"
 
-[tool.poetry.dev-dependencies]
-pipreqs = "^0.4.13"
-
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
+pipreqs = "^0.4.13"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
