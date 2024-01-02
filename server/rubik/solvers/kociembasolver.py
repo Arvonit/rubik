@@ -83,11 +83,11 @@ class KociembaSolver(Solver):
         self.end = time()
         self.time_to_solve = round(self.end - self.start, 5)
 
-        # print(
-        #     f"The solution requires {len(self.moves)} moves and took "
-        #     + f"{self.time_to_solve} seconds."
-        # )
-        # print(" ".join(self.moves))
+        print(
+            f"The solution requires {len(self.moves)} moves and took "
+            + f"{self.time_to_solve} seconds."
+        )
+        print(" ".join(self.moves))
 
         # Determine which moves were calculated in phase 1 and phase 2
         # phase_1_moves = " ".join(self.moves[:self.phase_1_moves_index])
@@ -258,7 +258,8 @@ class KociembaSolver(Solver):
 
         for i in range(6):
             if count[i] != 9:
-                return -1
+                # status = -1
+                raise ValueError("Not all colors appear exactly 9 times.")
 
         status = self.cubie_cube.validate()
         error_message = ""
