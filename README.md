@@ -5,18 +5,17 @@ class.
 
 ## Overview
 
-This project is primarily a web application, so it is divided into frontend and backend modules. 
+This project is primarily a web app, so it is divided into both client and server modules. 
 The backend is written in Python and does most of the heavy lifting as my data structures 
-class was taught in Python and the interface was originally a CLI. The frontend is a React app
-written in TypeScript.
+class was taught in Python and the interface was originally a CLI. The frontend is built with
+NextJS.
 
-
-This project uses `poetry` to manage dependencies for the Python part and `npm` for the JavaScript
-part, so you must have both installed. To download the python dependencies, you simply run 
-`poetry install`. You can than forward any shell command to `poetry` using `poetry run`. 
-For instance, to run an interactive session of python, use `poetry run python3`. `poetry` also
-includes a shell to avoid the `poetry run` prefix to shell commands. You can launch this with 
-`poetry shell`. To download the node dependencies, you similarly run `npm install`.
+This project uses `poetry` to manage dependencies for the backend and `npm` for the frontend, so 
+you must have both installed. To download the python dependencies, you simply run `poetry install`. 
+You can than forward any shell command to `poetry` using `poetry run`. For instance, to run an 
+interactive session of python, use `poetry run python3`. `poetry` also includes a shell to avoid 
+the `poetry run` prefix to shell commands. You can launch this with `poetry shell`. Similarly, to
+download the node dependencies, run `npm install`.
 
 ## Usage
 
@@ -74,10 +73,6 @@ BBB RRR GGG OOO
     WWW
 ```
 
-<!-- ```python
-print()
-``` -->
-
 ### Website
 
 ![Screenshot of the website](website.png)
@@ -94,3 +89,36 @@ containing the solved cube string, a list of moves, and the time it took to solv
 To use the website, click [here](https://rubik.arvind.me). If you want to run it locally, 
 run `npm start` in the `frontend` directory and run `poetry run python3 rubik/server.py` in the 
 `backend` directory.
+
+## Benchmarks
+
+On my 14" M2 Pro MacBook Pro, the solver performs surprisingly well, taking about 0.28 seconds and
+23 moves to solve a well-scrambled cube. Running the project in PyPy is a simple optimization 
+that significantly speeds up the solver, bringing the runtime down to about 0.03 seconds. However, 
+an implementation in a low-level language like C is another order of magnitude more performant, 
+taking about 0.007 seconds to solve, which is basically instant. Below is a more detailed breakdown 
+of the performance, ran 100 times each with cubes scrambled 10, 25, and 40 times.
+
+### Python
+
+| Shuffles | Time    | Min Time | Max Time | Moves | Min Moves | Max Moves |
+| -------- | ------- | -------- | -------- | ----- | --------- | --------- |
+| 10       | 0.02692 | 8e-05    | 0.46676  | 12.74 | 4         | 24        |
+| 25       | 0.23317 | 0.00052  | 2.74676  | 22.95 | 11        | 26        |
+| 40       | 0.27608 | 0.00415  | 1.10133  | 23.3  | 19        | 25        |
+
+### PyPy
+
+| Shuffles | Time    | Min Time | Max Time | Moves | Min Moves | Max Moves |
+| -------- | ------- | -------- | -------- | ----- | --------- | --------- |
+| 10       | 0.0056  | 0.00022  | 0.17648  | 13.62 | 3         | 25        |
+| 25       | 0.02788 | 0.00047  | 0.28021  | 22.86 | 8         | 26        |
+| 40       | 0.03008 | 0.00159  | 0.25512  | 23.19 | 20        | 25        |
+
+### [Implementation in C](https://github.com/muodov/kociemba)
+
+| Shuffles | Time    | Min Time | Max Time | Moves | Min Moves | Max Moves |
+| -------- | ------- | -------- | -------- | ----- | --------- | --------- |
+| 10       | 0.00023 | 6e-05    | 0.00568  | 11.11 | 4         | 19        |
+| 25       | 0.00588 | 0.00025  | 0.03474  | 20.52 | 17        | 22        |
+| 40       | 0.00707 | 0.00023  | 0.04331  | 20.68 | 18        | 22        |
