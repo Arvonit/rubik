@@ -10,8 +10,8 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "localhost:3000",
-    "rubik.arvind.dev",
-    "https://rubik.arvind.dev",
+    "rubik.arvind.me",
+    "https://rubik.arvind.me",
 ]
 app.add_middleware(
     CORSMiddleware,

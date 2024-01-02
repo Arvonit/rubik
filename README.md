@@ -91,6 +91,6 @@ FastAPI. The frontend makes an HTTP GET request when the solve button is pressed
 54-character string representation of the cube as a parameter. The backend returns a JSON 
 containing the solved cube string, a list of moves, and the time it took to solve.
 
-To use the website, click [here](https://rubik.arvind.dev). If you want to run it locally, 
+To use the website, click [here](https://rubik.arvind.me). If you want to run it locally, 
 run `npm start` in the `frontend` directory and run `poetry run python3 rubik/server.py` in the 
 `backend` directory.
