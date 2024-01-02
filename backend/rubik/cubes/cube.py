@@ -1,10 +1,11 @@
 import numpy as np
+from .facecube import FaceCube
 from random import choice
-from rubik.facecube import FaceCube
+from typing import Optional
 
 
 class Cube:
-    def __init__(self, cube_str: str = None):
+    def __init__(self, cube_str: Optional[str] = None):
         randomize_cube = False
 
         if cube_str is None:
@@ -22,59 +23,66 @@ class Cube:
             # Verify cube_str is valid
             for char in cube_str:
                 if char not in ("W", "B", "R", "G", "Y", "O"):
-                    raise ValueError("The cube string argument contains invalid characters " +
-                                     "(i.e. something other than " +
-                                     "'W', 'B', 'R', 'G', 'Y', 'O').")
+                    raise ValueError(
+                        "The cube string argument contains invalid characters "
+                        "(i.e. something other than 'W', 'B', 'R', 'G', 'Y', 'O')."
+                    )
 
-        self.pieces: np.ndarray = np.array([
-            # Up
+        self.pieces: np.ndarray = np.array(
             [
-                [cube_str[0], cube_str[1], cube_str[2]],
-                [cube_str[3], cube_str[4], cube_str[5]],
-                [cube_str[6], cube_str[7], cube_str[8]]
-            ],
-            # Left
-            [
-                [cube_str[9], cube_str[10], cube_str[11]],
-                [cube_str[12], cube_str[13], cube_str[14]],
-                [cube_str[15], cube_str[16], cube_str[17]]
-            ],
-            # Front
-            [
-                [cube_str[18], cube_str[19], cube_str[20]],
-                [cube_str[21], cube_str[22], cube_str[23]],
-                [cube_str[24], cube_str[25], cube_str[26]]
-            ],
-            # Right
-            [
-                [cube_str[27], cube_str[28], cube_str[29]],
-                [cube_str[30], cube_str[31], cube_str[32]],
-                [cube_str[33], cube_str[34], cube_str[35]]
-            ],
-            # Back
-            [
-                [cube_str[36], cube_str[37], cube_str[38]],
-                [cube_str[39], cube_str[40], cube_str[41]],
-                [cube_str[42], cube_str[43], cube_str[44]]
-            ],
-            # Down
-            [
-                [cube_str[45], cube_str[46], cube_str[47]],
-                [cube_str[48], cube_str[49], cube_str[50]],
-                [cube_str[51], cube_str[52], cube_str[53]]
+                # Up
+                [
+                    [cube_str[0], cube_str[1], cube_str[2]],
+                    [cube_str[3], cube_str[4], cube_str[5]],
+                    [cube_str[6], cube_str[7], cube_str[8]],
+                ],
+                # Left
+                [
+                    [cube_str[9], cube_str[10], cube_str[11]],
+                    [cube_str[12], cube_str[13], cube_str[14]],
+                    [cube_str[15], cube_str[16], cube_str[17]],
+                ],
+                # Front
+                [
+                    [cube_str[18], cube_str[19], cube_str[20]],
+                    [cube_str[21], cube_str[22], cube_str[23]],
+                    [cube_str[24], cube_str[25], cube_str[26]],
+                ],
+                # Right
+                [
+                    [cube_str[27], cube_str[28], cube_str[29]],
+                    [cube_str[30], cube_str[31], cube_str[32]],
+                    [cube_str[33], cube_str[34], cube_str[35]],
+                ],
+                # Back
+                [
+                    [cube_str[36], cube_str[37], cube_str[38]],
+                    [cube_str[39], cube_str[40], cube_str[41]],
+                    [cube_str[42], cube_str[43], cube_str[44]],
+                ],
+                # Down
+                [
+                    [cube_str[45], cube_str[46], cube_str[47]],
+                    [cube_str[48], cube_str[49], cube_str[50]],
+                    [cube_str[51], cube_str[52], cube_str[53]],
+                ],
             ]
-        ])
+        )
 
         if randomize_cube:
             self.randomize()
 
     def randomize(self, shuffles_num: int = 18):
-        transformations = ["F", "F'", "F2",
-                           "U", "U'", "U2",
-                           "L", "L'", "L2",
-                           "R", "R'", "R2",
-                           "B", "B'", "B2",
-                           "D", "D'", "D2"]
+        # fmt: off
+        transformations = [
+            "F", "F'", "F2",
+            "U", "U'", "U2",
+            "L", "L'", "L2",
+            "R", "R'", "R2",
+            "B", "B'", "B2",
+            "D", "D'", "D2"
+        ]
+        # fmt: on
         for i in range(shuffles_num):
             self.transform(choice(transformations))
 
@@ -89,7 +97,7 @@ class Cube:
 
         return is_solved
 
-    def transform(self, transformation: str = None):
+    def transform(self, transformation: Optional[str] = None):
         action = transformation[0]
         times = 1
         ccw = False
@@ -107,19 +115,19 @@ class Cube:
             times = 1
 
         # TODO: Replace with match statement once Python 3.10 is out
-        if action == 'F':
+        if action == "F":
             self._front(times, ccw)
-        elif action == 'R':
+        elif action == "R":
             self._right(times, ccw)
-        elif action == 'U':
+        elif action == "U":
             self._up(times, ccw)
-        elif action == 'L':
+        elif action == "L":
             self._left(times, ccw)
-        elif action == 'B':
+        elif action == "B":
             self._back(times, ccw)
-        elif action == 'D':
+        elif action == "D":
             self._down(times, ccw)
-        elif action == 'Y':
+        elif action == "Y":
             self._rotate_y(times, ccw)
         else:
             print("Invalid transformation", transformation)
@@ -160,7 +168,9 @@ class Cube:
     def set_down_face(self, face: np.ndarray):
         self.pieces[5] = face
 
-    def _rotate_face(self, face: np.ndarray, times: int = 1, ccw: bool = False) -> np.ndarray:
+    def _rotate_face(
+        self, face: np.ndarray, times: int = 1, ccw: bool = False
+    ) -> np.ndarray:
         times = -times if not ccw else times
         return np.rot90(face, times)
 
@@ -329,7 +339,8 @@ class Cube:
         cube_str = "".join(np.concatenate([up, right, front, down, left, back]))
 
         # Grab the middle color of each face to determine each face's color
-        # Convert the colors to lowercase so that they do not conflict with the face letters
+        # Convert the colors to lowercase so that they do not conflict with the face
+        # letters
         up_color = self.up_face()[1][1].lower()
         right_color = self.right_face()[1][1].lower()
         front_color = self.front_face()[1][1].lower()
@@ -337,15 +348,18 @@ class Cube:
         left_color = self.left_face()[1][1].lower()
         back_color = self.back_face()[1][1].lower()
 
-        # Convert the colors to lowercase so that they do not conflict with the face letters
+        # Convert the colors to lowercase so that they do not conflict with the face
+        # letters
         cube_str = cube_str.lower()
         # Convert colors to face letter
-        return cube_str.replace(up_color, "U") \
-            .replace(right_color, "R") \
-            .replace(front_color, "F") \
-            .replace(down_color, "D") \
-            .replace(left_color, "L") \
+        return (
+            cube_str.replace(up_color, "U")
+            .replace(right_color, "R")
+            .replace(front_color, "F")
+            .replace(down_color, "D")
+            .replace(left_color, "L")
             .replace(back_color, "B")
+        )
 
     def to_face_cube(self) -> FaceCube:
         return FaceCube(self.face_str())

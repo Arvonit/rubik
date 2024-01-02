@@ -26,7 +26,7 @@ import json
 import os
 import requests
 
-from rubik.cubiecube import MOVE_CUBE, CubieCube
+from .cubiecube import MOVE_CUBE, CubieCube
 from os import path
 
 
@@ -94,16 +94,16 @@ class Tables:
             cls.udslice_flip_prune = PruningTable(
                 tables["udslice_flip_prune"], cls.FLIP
             )
-            cls.edge4_edge8_prune = PruningTable(
-                tables["edge4_edge8_prune"], cls.EDGE8
-            )
+            cls.edge4_edge8_prune = PruningTable(tables["edge4_edge8_prune"], cls.EDGE8)
             cls.edge4_corner_prune = PruningTable(
                 tables["edge4_corner_prune"], cls.CORNER
             )
         else:
             # TODO: Attempt to download a pre-generated one
-            # response = requests.get("https://www.dropbox.com/s/1g77l5ih0y7vpae/tables.json",
-            #                         allow_redirects=True)
+            # response = requests.get(
+            #     "https://www.dropbox.com/s/1g77l5ih0y7vpae/tables.json",
+            #     allow_redirects=True,
+            # )
             # print(response.status_code)
             # print(response.content)
             # if response.status_code != 200 or not path.exists("tables.json"):
@@ -114,7 +114,9 @@ class Tables:
 
             # Otherwise, generate it mnaually
 
-            print("Generating move and pruning tables. May take a few minutes to complete.")
+            print(
+                "Generating move and pruning tables. May take a few minutes to complete."
+            )
             # ----------  Phase 1 move tables  ---------- #
             print("Generating twist table")
             cls.twist_move = cls.make_twist_table()

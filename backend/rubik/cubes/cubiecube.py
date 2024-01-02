@@ -1,7 +1,7 @@
 from __future__ import annotations
 from functools import reduce
 from math import comb
-from rubik.pieces import Corner, Edge
+from .pieces import Corner, Edge
 
 
 class CubieCube:
@@ -35,8 +35,13 @@ class CubieCube:
 
         for corner in Corner:
             cp.append(self.corner_permutations[other.corner_permutations[corner]])
-            co.append((self.corner_orientations[other.corner_permutations[corner]] +
-                       other.corner_orientations[corner]) % 3)
+            co.append(
+                (
+                    self.corner_orientations[other.corner_permutations[corner]]
+                    + other.corner_orientations[corner]
+                )
+                % 3
+            )
 
         self.corner_orientations = co
         self.corner_permutations = cp
@@ -48,7 +53,12 @@ class CubieCube:
         for edge in Edge:
             ep.append(self.edge_permutations[other.edge_permutations[edge]])
             eo.append(
-                (other.edge_orientations[edge] + self.edge_orientations[other.edge_permutations[edge]]) % 2)
+                (
+                    other.edge_orientations[edge]
+                    + self.edge_orientations[other.edge_permutations[edge]]
+                )
+                % 2
+            )
 
         self.edge_orientations = eo
         self.edge_permutations = ep
@@ -88,7 +98,7 @@ class CubieCube:
     @property
     def phase_1_edge(self):
         """
-        Get the edge orientation coordinate of this cube. This is needed for phase 1 of the 
+        Get the edge orientation coordinate of this cube. This is needed for phase 1 of the
         kociemba algorithm.
         """
         return reduce(lambda x, y: 2 * x + y, self.edge_orientations[:11])
@@ -193,7 +203,7 @@ class CubieCube:
     def phase_2_edge(self):
         """
         Get the phase 2 edge permutation coordinate of this cube. This is determined by the
-        permutations of the 8 edges not inside the UD slice. This is needed for phase 2 of the 
+        permutations of the 8 edges not inside the UD slice. This is needed for phase 2 of the
         kociemba algorithm.
         """
         edge = 0
@@ -221,7 +231,7 @@ class CubieCube:
             permutations[i + 1] = edges.pop(i + 1 - coeffecients[i])
 
         permutations[0] = edges[0]
-        self.edge_permutations[:8] = permutations
+        self.edge_permutations[:8] = permutations  # type: ignore
 
     @property
     def phase_2_ud_slice(self):
@@ -255,7 +265,7 @@ class CubieCube:
             permutations[i + 1] = ud_slice_edges.pop(i + 1 - coeffecients[i])
 
         permutations[0] = ud_slice_edges[0]
-        self.edge_permutations[8:] = permutations
+        self.edge_permutations[8:] = permutations  # type: ignore
 
     # FUNCTIONS TO DETERMINE THE VALIDITY OF CUBE
 

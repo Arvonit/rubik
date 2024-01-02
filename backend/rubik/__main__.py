@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
-from rubik.cube import Cube
-from rubik.kociembasolver import KociembaSolver
-from rubik.printer import print_cube
+from rubik.cubes import Cube, print_cube
+from rubik.solvers import KociembaSolver
 
 
 def main():
@@ -9,12 +8,14 @@ def main():
     The entry point for the CLI.
     """
     parser = ArgumentParser(description="Solve a 3x3 Rubik's cube")
-    parser.add_argument("cube_str",
-                        metavar="cube",
-                        action="store",
-                        nargs="?",
-                        type=str,
-                        help="A 54-character string with the colors of each face of the cube")
+    parser.add_argument(
+        "cube_str",
+        metavar="cube",
+        action="store",
+        nargs="?",
+        type=str,
+        help="A 54-character string with the colors of each face of the cube",
+    )
 
     args = parser.parse_args()
     cube_str: str = args.cube_str

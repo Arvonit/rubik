@@ -1,6 +1,6 @@
 from unittest import TestCase
-from rubik.kociembasolver import KociembaSolver
-from rubik.cube import Cube
+from rubik.solvers import KociembaSolver
+from rubik.cubes import Cube
 
 
 class TestKociembaSolver(TestCase):

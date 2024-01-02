@@ -1,6 +1,6 @@
 from __future__ import annotations
-from rubik.cubiecube import CubieCube
-from rubik.tables import Tables
+from .cubiecube import CubieCube
+from rubik.utils import Tables
 
 
 # TODO: Move functionality from CubieCube to CoordCube since that makes more sense
@@ -34,13 +34,13 @@ class CoordCube:
             cube.phase_1_ud_slice,
             cube.phase_2_corner,
             cube.phase_2_edge,
-            cube.phase_2_ud_slice
+            cube.phase_2_ud_slice,
         )
 
     def move(self, move_num: int):
         self.phase_1_corner = self.tables.twist_move[self.phase_1_corner][move_num]
         self.phase_1_edge = self.tables.flip_move[self.phase_1_edge][move_num]
-        self.phase_1_ud_slice = self.tables.udslice_move[self.phase_1_ud_slice][move_num]
+        self.phase_1_ud_slice = self.tables.udslice_move[self.phase_1_ud_slice][move_num]  # fmt: skip
         self.phase_2_corner = self.tables.corner_move[self.phase_2_corner][move_num]
         self.phase_2_edge = self.tables.edge8_move[self.phase_2_edge][move_num]
         self.phase_2_ud_slice = self.tables.edge4_move[self.phase_2_ud_slice][move_num]

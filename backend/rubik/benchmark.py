@@ -1,17 +1,21 @@
 from prettytable import PrettyTable
-from cube import Cube
-from kociembasolver import KociembaSolver
+from rubik.cubes import Cube
+from rubik.solvers import KociembaSolver, Solver, FastSolver
 
 
-def benchmark(trials: int = 100, shuffles_num: int = 10) -> list[float]:
-    times = []
-    moves = []
+def benchmark(
+    trials: int = 100,
+    shuffles_num: int = 10,
+    solver_cls: type[Solver] = KociembaSolver,
+) -> list[int | float]:
+    times: list[float] = []
+    moves: list[int] = []
 
     for i in range(trials):
         cube = Cube("RRRRRRRRRBBBBBBBBBWWWWWWWWWGGGGGGGGGYYYYYYYYYOOOOOOOOO")
         cube.randomize(shuffles_num)
 
-        solver = KociembaSolver(cube)
+        solver = solver_cls(cube)
         solver.solve()
 
         times.append(solver.time_to_solve)
@@ -20,8 +24,15 @@ def benchmark(trials: int = 100, shuffles_num: int = 10) -> list[float]:
     average_time = round(sum(times) / trials, 5)
     average_moves = sum(moves) / trials
 
-    return [shuffles_num, average_time, round(min(times), 5), round(max(times), 5),
-            average_moves, min(moves), max(moves)]
+    return [
+        shuffles_num,
+        average_time,
+        round(min(times), 5),
+        round(max(times), 5),
+        average_moves,
+        min(moves),
+        max(moves),
+    ]
 
 
 def main():
@@ -30,13 +41,37 @@ def main():
     cubes. These statistics are calculated over a 100 trials.
     """
     table = PrettyTable()
-    table.field_names = ["Shuffles", "Time", "Min Time",
-                         "Max Time", "Moves", "Min Moves", "Max Moves"]
-    table.add_row(benchmark(shuffles_num=10))
-    table.add_row(benchmark(shuffles_num=25))
-    table.add_row(benchmark(shuffles_num=40))
+    table.title = "My Implementation"
+    table.field_names = [
+        "Shuffles",
+        "Time",
+        "Min Time",
+        "Max Time",
+        "Moves",
+        "Min Moves",
+        "Max Moves",
+    ]
+    table.add_row(benchmark(trials=100, shuffles_num=10))
+    table.add_row(benchmark(trials=100, shuffles_num=25))
+    table.add_row(benchmark(trials=100, shuffles_num=40))
+
+    table_c = PrettyTable()
+    table_c.title = "C Implementation"
+    table_c.field_names = [
+        "Shuffles",
+        "Time",
+        "Min Time",
+        "Max Time",
+        "Moves",
+        "Min Moves",
+        "Max Moves",
+    ]
+    table_c.add_row(benchmark(shuffles_num=10, solver_cls=FastSolver))
+    table_c.add_row(benchmark(shuffles_num=25, solver_cls=FastSolver))
+    table_c.add_row(benchmark(shuffles_num=40, solver_cls=FastSolver))
 
     print(table)
+    print(table_c)
 
 
 if __name__ == "__main__":

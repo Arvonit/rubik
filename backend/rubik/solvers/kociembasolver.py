@@ -1,16 +1,17 @@
 import numpy as np
 from time import time
-from rubik.coordcube import CoordCube
-from rubik.cube import Cube
-from rubik.solver import Solver
-from rubik.tables import Tables
-from rubik.pieces import Face
+from rubik.cubes import CoordCube
+from rubik.cubes import Cube
+from rubik.cubes import Face
+from rubik.cubes import Tables
+from .solver import Solver
+import kociemba
 
 
 class KociembaSolver(Solver):
     """
-    A basic implementation of Herbert Kociemba's Two Phase algorithm. Further details, including 
-    the rationale behind certain design decisions of this algorithm, can be found on Kociemba's 
+    A basic implementation of Herbert Kociemba's Two Phase algorithm. Further details, including
+    the rationale behind certain design decisions of this algorithm, can be found on Kociemba's
     website (http://kociemba.org/cube.htm).
     """
 
@@ -72,9 +73,6 @@ class KociembaSolver(Solver):
         # We first run phase 1 and when it ends, phase 2 will automatically be called
         self._phase_1()
 
-        # Kociemba implemented in C
-        # self.moves = kociemba.solve(self.cube.face_str()).split(" ")
-
         # Apply transformations gathered from the solver
         for transformation in self.moves:
             self.cube.transform(transformation)
@@ -85,9 +83,11 @@ class KociembaSolver(Solver):
         self.end = time()
         self.time_to_solve = round(self.end - self.start, 5)
 
-        print(f"The solution requires {len(self.moves)} moves and took " +
-              f"{self.time_to_solve} seconds.")
-        print(" ".join(self.moves))
+        # print(
+        #     f"The solution requires {len(self.moves)} moves and took "
+        #     + f"{self.time_to_solve} seconds."
+        # )
+        # print(" ".join(self.moves))
 
         # Determine which moves were calculated in phase 1 and phase 2
         # phase_1_moves = " ".join(self.moves[:self.phase_1_moves_index])
@@ -109,8 +109,12 @@ class KociembaSolver(Solver):
         This heuristic returns a lower bound on the number of moves to reach phase 2.
         """
         return max(
-            self.tables.udslice_twist_prune[self.phase_1_ud_slice[i], self.phase_1_corner[i]],
-            self.tables.udslice_flip_prune[self.phase_1_ud_slice[i], self.phase_1_edge[i]]
+            self.tables.udslice_twist_prune[
+                self.phase_1_ud_slice[i], self.phase_1_corner[i]
+            ],
+            self.tables.udslice_flip_prune[
+                self.phase_1_ud_slice[i], self.phase_1_edge[i]
+            ],
         )
 
     def _phase_1_search(self, n: int, depth: int) -> int:
@@ -138,12 +142,15 @@ class KociembaSolver(Solver):
                     move_num = 3 * i + j - 1
 
                     # Update phase 1 coordinates using tables and heuristic
-                    self.phase_1_corner[n + 1] = \
-                        self.tables.twist_move[self.phase_1_corner[n]][move_num]
-                    self.phase_1_edge[n + 1] = \
-                        self.tables.flip_move[self.phase_1_edge[n]][move_num]
-                    self.phase_1_ud_slice[n + 1] = \
-                        self.tables.udslice_move[self.phase_1_ud_slice[n]][move_num]
+                    self.phase_1_corner[n + 1] = self.tables.twist_move[
+                        self.phase_1_corner[n]
+                    ][move_num]
+                    self.phase_1_edge[n + 1] = self.tables.flip_move[
+                        self.phase_1_edge[n]
+                    ][move_num]
+                    self.phase_1_ud_slice[n + 1] = self.tables.udslice_move[
+                        self.phase_1_ud_slice[n]
+                    ][move_num]
                     self.phase_1_min_distance[n + 1] = self._phase_1_heuristic(n + 1)
 
                     # Start search from next node
@@ -177,12 +184,17 @@ class KociembaSolver(Solver):
         This heuristic returns a lower bound on the number of moves to solve the cube.
         """
         return max(
-            self.tables.edge4_corner_prune[self.phase_2_ud_slice[i], self.phase_2_corner[i]],
-            self.tables.edge4_edge8_prune[self.phase_2_ud_slice[i], self.phase_2_edge[i]]
+            self.tables.edge4_corner_prune[
+                self.phase_2_ud_slice[i], self.phase_2_corner[i]
+            ],
+            self.tables.edge4_edge8_prune[
+                self.phase_2_ud_slice[i], self.phase_2_edge[i]
+            ],
         )
 
     def _phase_2_search(self, n: int, depth: int) -> int:
-        # If the estimated distance to complete phase 2 is 0, then we return the current depth, `n`
+        # If the estimated distance to complete phase 2 is 0, then we return the
+        # current depth, `n`
         if self.phase_2_min_distance[n] == 0:
             return n
         elif self.phase_2_min_distance[n] <= depth:
@@ -204,12 +216,15 @@ class KociembaSolver(Solver):
                     move_num = 3 * i + j - 1
 
                     # Update phase 2 coordinates using tables and heuristic
-                    self.phase_2_corner[n + 1] = \
-                        self.tables.corner_move[self.phase_2_corner[n]][move_num]
-                    self.phase_2_edge[n + 1] = \
-                        self.tables.edge8_move[self.phase_2_edge[n]][move_num]
-                    self.phase_2_ud_slice[n + 1] = \
-                        self.tables.edge4_move[self.phase_2_ud_slice[n]][move_num]
+                    self.phase_2_corner[n + 1] = self.tables.corner_move[
+                        self.phase_2_corner[n]
+                    ][move_num]
+                    self.phase_2_edge[n + 1] = self.tables.edge8_move[
+                        self.phase_2_edge[n]
+                    ][move_num]
+                    self.phase_2_ud_slice[n + 1] = self.tables.edge4_move[
+                        self.phase_2_ud_slice[n]
+                    ][move_num]
                     self.phase_2_min_distance[n + 1] = self._phase_2_heuristic(n + 1)
 
                     # Start search from next node
@@ -231,7 +246,9 @@ class KociembaSolver(Solver):
                 return Face(axis).name + "'"
             raise RuntimeError("Invalid move in solution.")
 
-        return list(map(recover_move, zip(self.moves_face[:length], self.moves_turn[:length])))
+        return list(
+            map(recover_move, zip(self.moves_face[:length], self.moves_turn[:length]))
+        )
 
     def _validate_cube(self):
         count = [0 for i in range(6)]

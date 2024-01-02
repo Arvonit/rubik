@@ -2,8 +2,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.params import Query
 from fastapi.middleware.cors import CORSMiddleware
-from rubik.cube import Cube
-from rubik.kociembasolver import KociembaSolver
+from rubik.cubes import Cube
+from rubik.solvers import KociembaSolver
 
 
 app = FastAPI()
@@ -11,7 +11,7 @@ origins = [
     "http://localhost:3000",
     "localhost:3000",
     "rubik.arvind.dev",
-    "https://rubik.arvind.dev"
+    "https://rubik.arvind.dev",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -23,7 +23,7 @@ app.add_middleware(
 
 
 @app.get("/")
-async def root(cube_str: str = Query(..., alias="cube", min_length=54, max_length=54)):
+async def root(cube_str: str = Query(..., alias="cube", min_length=54, max_length=54)):  # type: ignore
     # print(cube_str)
     cube: Cube
     solver: KociembaSolver
@@ -38,7 +38,11 @@ async def root(cube_str: str = Query(..., alias="cube", min_length=54, max_lengt
     except Exception as e:
         return {"error": str(e)}
 
-    return {"cube": str(cube), "moves": solver.moves, "timeToSolve": solver.time_to_solve}
+    return {
+        "cube": str(cube),
+        "moves": solver.moves,
+        "timeToSolve": solver.time_to_solve,
+    }
 
 
 if __name__ == "__main__":

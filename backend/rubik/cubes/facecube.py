@@ -1,5 +1,5 @@
-from rubik.cubiecube import CubieCube
-from rubik.pieces import Face, Corner, Edge, Facelet
+from .cubiecube import CubieCube
+from .pieces import Face, Corner, Edge, Facelet
 
 
 class FaceCube:
@@ -66,28 +66,41 @@ class FaceCube:
         for i in Corner:
             for orientation in range(3):
                 # All corner names begin with either a U or D
-                if self.pieces[FaceCube.CORNER_FACELETS[i][orientation]] in [Face.U, Face.D]:
+                if self.pieces[FaceCube.CORNER_FACELETS[i][orientation]] in [
+                    Face.U,
+                    Face.D,
+                ]:
                     break
 
             color_1 = self.pieces[FaceCube.CORNER_FACELETS[i][(orientation + 1) % 3]]
             color_2 = self.pieces[FaceCube.CORNER_FACELETS[i][(orientation + 2) % 3]]
 
             for j in Corner:
-                if color_1 == FaceCube.CORNER_COLORS[j][1] and \
-                   color_2 == FaceCube.CORNER_COLORS[j][2]:
+                if (
+                    color_1 == FaceCube.CORNER_COLORS[j][1]
+                    and color_2 == FaceCube.CORNER_COLORS[j][2]
+                ):
                     cubie_cube.corner_permutations[i] = j
                     cubie_cube.corner_orientations[i] = orientation
                     break
 
         for i in Edge:
             for j in Edge:
-                if self.pieces[FaceCube.EDGE_FACELETS[i][0]] == FaceCube.EDGE_COLORS[j][0] and \
-                   self.pieces[FaceCube.EDGE_FACELETS[i][1]] == FaceCube.EDGE_COLORS[j][1]:
+                if (
+                    self.pieces[FaceCube.EDGE_FACELETS[i][0]]
+                    == FaceCube.EDGE_COLORS[j][0]
+                    and self.pieces[FaceCube.EDGE_FACELETS[i][1]]
+                    == FaceCube.EDGE_COLORS[j][1]
+                ):
                     cubie_cube.edge_permutations[i] = j
                     cubie_cube.edge_orientations[i] = 0
                     break
-                if self.pieces[FaceCube.EDGE_FACELETS[i][0]] == FaceCube.EDGE_COLORS[j][1] and \
-                   self.pieces[FaceCube.EDGE_FACELETS[i][1]] == FaceCube.EDGE_COLORS[j][0]:
+                if (
+                    self.pieces[FaceCube.EDGE_FACELETS[i][0]]
+                    == FaceCube.EDGE_COLORS[j][1]
+                    and self.pieces[FaceCube.EDGE_FACELETS[i][1]]
+                    == FaceCube.EDGE_COLORS[j][0]
+                ):
                     cubie_cube.edge_permutations[i] = j
                     cubie_cube.edge_orientations[i] = 1
                     break
