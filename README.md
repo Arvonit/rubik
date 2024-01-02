@@ -7,7 +7,8 @@ class.
 
 This project is primarily a web application, so it is divided into frontend and backend modules. 
 The backend is written in Python and does most of the heavy lifting as my data structures 
-class was taught in Python and the interface was originally a CLI. The frontend is written in TypeScript and uses React.
+class was taught in Python and the interface was originally a CLI. The frontend is a React app
+written in TypeScript.
 
 
 This project uses `poetry` to manage dependencies for the Python part and `npm` for the JavaScript
@@ -19,7 +20,7 @@ includes a shell to avoid the `poetry run` prefix to shell commands. You can lau
 
 ## Usage
 
-To use this program, you have two interfaces: a CLI and a [website](https://rubik.arvind.dev).
+To use this program, you have two interfaces: a CLI and a [website](https://rubik.arvind.me).
 
 ### CLI
 
