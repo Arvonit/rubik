@@ -13,7 +13,7 @@ function Options({ cube, setCube, onSolve, isLoading }: Props) {
     <>
       <Input
         placeholder="54-Character Cube String"
-        onChange={event => setCube(event.target.value)}
+        onChange={(event) => setCube(event.target.value)}
       />
       <Button isLoading={isLoading} loadingText="Solving" colorScheme="blue" onClick={onSolve}>
         Solve

@@ -1,12 +1,14 @@
+import Head from 'next/head';
+import Image from 'next/image';
 import { Alert, AlertIcon } from '@chakra-ui/alert';
 import { Container, VStack } from '@chakra-ui/layout';
 import { useState } from 'react';
-import Cube from './components/Cube';
-import Header from './components/Header';
-import Options from './components/Options';
-import Results from './components/Results';
+import Cube from '../components/Cube';
+import Header from '../components/Header';
+import Options from '../components/Options';
+import Results from '../components/Results';
 
-function App() {
+export default function Home() {
   const DEFAULT_CUBE = 'RRRRRRRRRBBBBBBBBBWWWWWWWWWGGGGGGGGGYYYYYYYYYOOOOOOOOO';
 
   // State variables
@@ -20,8 +22,6 @@ function App() {
   const [moves, setMoves] = useState([]);
   const [timeToSolve, setTimeToSolve] = useState(0);
 
-  // Helper functions
-
   function onSolve() {
     if (showAlert) {
       return;
@@ -30,9 +30,10 @@ function App() {
     setIsLoading(true);
     toggleAlert(false);
 
-    fetch(`https://arvonit-rubik.herokuapp.com/?cube=${cube}`)
-      .then(response => response.json())
-      .then(response => {
+    // fetch(`https://arvonit-rubik.herokuapp.com/?cube=${cube}`)
+    fetch(`http://localhost:8000/?cube=${cube}`)
+      .then((response) => response.json())
+      .then((response) => {
         console.log(response);
         if (response.error !== undefined) {
           setAlertText(response.error);
@@ -45,7 +46,7 @@ function App() {
         setOriginalCube(cube);
         setCube(response.cube);
       })
-      .catch(error => {
+      .catch((error) => {
         setAlertText('Unable to connect to the server.');
         toggleAlert(true);
         console.log(error);
@@ -85,35 +86,40 @@ function App() {
     setCube(cubeString);
   }
 
-  // UI Root
   return (
-    <Container maxWidth="5xl" centerContent>
-      <VStack>
-        <Header />
+    <>
+      <Head>
+        <title>Rubik&apos;s Cube Solver</title>
+        <meta name="description" content="Rubik's cube solver" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Container maxWidth="5xl" centerContent>
+        <VStack>
+          <Header />
 
-        {showAlert && (
-          <Alert status="error">
-            <AlertIcon />
-            {alertText}
-          </Alert>
-        )}
+          {showAlert && (
+            <Alert status="error">
+              <AlertIcon />
+              {alertText}
+            </Alert>
+          )}
 
-        <Cube
-          cube={cube}
-          setCube={validateCube}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-        />
+          <Cube
+            cube={cube}
+            setCube={validateCube}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+          />
 
-        {/* Show the results only if we do not get an error from the server */}
-        {!showAlert && (
-          <Results originalCube={originalCube} moves={moves} timeToSolve={timeToSolve} />
-        )}
+          {/* Show the results only if we do not get an error from the server */}
+          {!showAlert && (
+            <Results originalCube={originalCube} moves={moves} timeToSolve={timeToSolve} />
+          )}
 
-        <Options cube={cube} setCube={validateCube} onSolve={onSolve} isLoading={isLoading} />
-      </VStack>
-    </Container>
+          <Options cube={cube} setCube={validateCube} onSolve={onSolve} isLoading={isLoading} />
+        </VStack>
+      </Container>
+    </>
   );
 }
-
-export default App;
