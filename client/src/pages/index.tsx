@@ -31,7 +31,7 @@ export default function Home() {
     toggleAlert(false);
 
     // fetch(`https://arvonit-rubik.herokuapp.com/?cube=${cube}`)
-    fetch(`http://localhost:8000/?cube=${cube}`)
+    fetch(`http://localhost:8000/solve?cube=${cube}`)
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
