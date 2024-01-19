@@ -1,6 +1,6 @@
 import time
 import kociemba
-from cubes import Cube
+from rubik.cubes import Cube
 from .solver import Solver
 
 

@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 
-@app.get("/solve")
+@app.get("/api/solve")
 async def solve(cube_str: str = Query(..., alias="cube", min_length=54, max_length=54)):  # type: ignore
     # print(cube_str)
     cube: Cube
