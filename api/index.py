@@ -6,7 +6,7 @@ from rubik.cubes import Cube
 from rubik.solvers import KociembaSolver
 
 
-app = FastAPI()
+app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
 # origins = [
 #     "http://localhost:3000",
 #     "localhost:3000",
