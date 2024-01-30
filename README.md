@@ -11,7 +11,7 @@ class was taught in Python and the interface was originally a CLI. The frontend 
 NextJS.
 
 This project uses `poetry` to manage dependencies for the backend and `npm` for the frontend, so 
-you must have both installed. To download the python dependencies, you simply run `poetry install`. 
+you must have both installed. To download the python dependencies, run `poetry install`. 
 You can than forward any shell command to `poetry` using `poetry run`. For instance, to run an 
 interactive session of python, use `poetry run python3`. `poetry` also includes a shell to avoid 
 the `poetry run` prefix to shell commands. You can launch this with `poetry shell`. Similarly, to
