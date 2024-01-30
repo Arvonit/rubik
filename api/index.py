@@ -7,19 +7,19 @@ from rubik.solvers import KociembaSolver
 
 
 app = FastAPI()
-origins = [
-    "http://localhost:3000",
-    "localhost:3000",
-    "rubik.arvind.me",
-    "https://rubik.arvind.me",
-]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# origins = [
+#     "http://localhost:3000",
+#     "localhost:3000",
+#     "rubik.arvind.me",
+#     "https://rubik.arvind.me",
+# ]
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 
 @app.get("/api/solve")
@@ -30,11 +30,14 @@ async def solve(cube_str: str = Query(..., alias="cube", min_length=54, max_leng
     try:
         cube = Cube(cube_str)
     except ValueError as e:
+        print(str(e))
         return {"error": str(e)}
 
     try:
         solver = KociembaSolver(cube)
         solver.solve()
+    except KeyError as e:  # Merge this logic into error handling for solver
+        return {"error": "Piece for a color is missing."}
     except Exception as e:
         return {"error": str(e)}
 
@@ -46,4 +49,4 @@ async def solve(cube_str: str = Query(..., alias="cube", min_length=54, max_leng
 
 
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="localhost", port=8000, reload=True)
+    uvicorn.run("index:app", host="localhost", port=8000, reload=True)
