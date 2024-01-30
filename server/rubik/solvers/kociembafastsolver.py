@@ -4,7 +4,7 @@ from rubik.cubes import Cube
 from .solver import Solver
 
 
-class FastSolver(Solver):
+class KociembaFastSolver(Solver):
     """
     A wrapper around an implementation of the Kociemba algorithm in C for benchmarking
     purposes.

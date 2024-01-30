@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from rubik.cubes import Cube, print_cube
-from rubik.solvers import KociembaSolver
+from rubik.solvers import KociembaSolver, KociembaFastSolver
 
 
 def main():
@@ -41,7 +41,7 @@ def main():
     print()
 
     try:
-        solver = KociembaSolver(cube)
+        solver = KociembaFastSolver(cube)
         solver.solve()
     except Exception as e:
         print(f"rubik: error: {e}")

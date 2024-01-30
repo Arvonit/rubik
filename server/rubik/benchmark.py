@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 from rubik.cubes import Cube
-from rubik.solvers import KociembaSolver, Solver, FastSolver
+from rubik.solvers import KociembaSolver, Solver, KociembaFastSolver
 
 
 def benchmark(
@@ -66,9 +66,9 @@ def main():
         "Min Moves",
         "Max Moves",
     ]
-    table_c.add_row(benchmark(shuffles_num=10, solver_cls=FastSolver))
-    table_c.add_row(benchmark(shuffles_num=25, solver_cls=FastSolver))
-    table_c.add_row(benchmark(shuffles_num=40, solver_cls=FastSolver))
+    table_c.add_row(benchmark(shuffles_num=10, solver_cls=KociembaFastSolver))
+    table_c.add_row(benchmark(shuffles_num=25, solver_cls=KociembaFastSolver))
+    table_c.add_row(benchmark(shuffles_num=40, solver_cls=KociembaFastSolver))
 
     print(table)
     print(table_c)
