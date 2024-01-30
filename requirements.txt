@@ -1,0 +1,7 @@
+fastapi==0.109.0
+kociemba==1.2.1
+numpy==1.26.3
+prettytable==3.9.0
+Requests==2.31.0
+string_color==1.2.3
+uvicorn==0.26.0

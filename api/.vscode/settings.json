@@ -1,7 +1,0 @@
-{
-    // Allow pylance to use relative import
-    "python.analysis.extraPaths": [
-        "./rubik"
-    ],
-    "python.defaultInterpreterPath": "/Users/arvind/Library/Caches/pypoetry/virtualenvs/rubik-RTaVgXht-py3.9/bin/python",
-}
